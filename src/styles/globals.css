@@ -4,9 +4,10 @@
 
 :root {
     --color-background-default: #181925;
+    --color-background-hover: #292f35;
     --color-background-accent: #333A48;
     --color-primary-default: #ff9f1c;
-    --color-primary-accent: #ffaa48;
+    --color-primary-accent: #d08a3b;
     --color-text-default: #F5F5F5;
 }
 

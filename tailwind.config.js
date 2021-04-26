@@ -6,6 +6,7 @@ module.exports = {
       colors: {
         background: {
           default: 'var(--color-background-default)',
+          hover: 'var(--color-background-hover)',
           accent: 'var(--color-background-accent)'
         },
 

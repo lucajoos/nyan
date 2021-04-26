@@ -8,7 +8,6 @@ const { ipcRenderer } = require('electron');
 
 const App = () => {
     const [ images, setImages ] = useState([]);
-    const [ uploadButtonIsHovered, setUploadButtonIsHovered ] = useState(false);
 
     useEffect(() => {
         ipcRenderer.send('get-files');
@@ -46,6 +45,23 @@ const App = () => {
         });
     }, [ images ]);
 
+    const handleOnInputChange = useCallback(event => {
+        if(event?.target?.files?.length > 0) {
+            const paths = [ ...event.target.files ].map(file => {
+                if(file ? file?.path?.length > 0 : false) {
+                    return file.path
+                }
+            });
+
+            ipcRenderer.invoke('drop', paths)
+                .then(current => {
+                    setImages(previous => [ ...current, ...previous ]);
+                });
+
+            return false;
+        }
+    }, []);
+
     return (
         <div
             className={ 'overflow-x-hidden p-16 w-full h-full relative' }
@@ -62,9 +78,10 @@ const App = () => {
 
             <ImageList images={ images } onRemove={ path => handleOnRemove(path) }/>
 
-            <div className={`text-background-default cursor-pointer absolute right-16 bottom-16 p-4 transition-all rounded-full bg-primary-default`}>
+            <label className={'text-background-default cursor-pointer absolute right-16 bottom-16 p-4 transition-all rounded-full bg-primary-default hover:bg-primary-accent'}>
                 <Upload size={ 24 }/>
-            </div>
+                <input className={'hidden'} type={'file'} onChange={event => handleOnInputChange(event)} multiple />
+            </label>
         </div>
     );
 };

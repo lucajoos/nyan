@@ -22,7 +22,7 @@ const Image = ({ path, selected, onRemove }) => {
     return (
         <div onMouseEnter={() => handleHover(true)} onMouseLeave={() => handleHover(false)} className={'cursor-pointer transition-all relative h-full w-full'}>
             <div className={'inline-block relative'}>
-                <div onClick={() => handleOnClickRemove()} className={`absolute -right-4 top-0 p-2 transition-all rounded-full bg-background-accent opacity-${isHovered ? '100' : '0'} pointer-events-${isHovered ? 'auto' : 'none'}`}>
+                <div onClick={() => handleOnClickRemove()} className={`absolute -right-4 top-0 p-2 transition-all rounded-full bg-background-accent hover:bg-background-hover opacity-${isHovered ? '100' : '0'} pointer-events-${isHovered ? 'auto' : 'none'}`}>
                     <X color={'var(--color-text-default)'} />
                 </div>
 
