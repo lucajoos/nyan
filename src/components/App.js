@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import ImageList from './ImageList';
 import Header from './Header';
-import { Image } from 'react-feather';
+import { Archive } from 'react-feather';
 
 const { ipcRenderer } = require('electron');
 
@@ -55,8 +55,8 @@ const App = () => {
             <div className={ 'absolute top-0 left-0 right-0 h-16 webkit-drag' }/>
 
             <Header>
-                <Image size={ 30 }/>
-                <span className={ 'ml-3' }>Selection</span>
+                <Archive size={ 30 }/>
+                <span className={ 'ml-3' }>Archive</span>
             </Header>
 
             <ImageList images={ images } onRemove={ path => handleOnRemove(path) }/>
