@@ -6,8 +6,6 @@ const ImageList = ({ images, onRemove }) => {
         onRemove(path);
     }, [ images, onRemove ]);
 
-    console.log(images)
-
     const items = images?.map(path => {
         if(path) {
             return <Image path={ path } key={ path.toString() } onRemove={ path => handleOnRemove(path) }/>

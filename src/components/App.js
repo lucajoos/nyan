@@ -2,12 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 
 import ImageList from './ImageList';
 import Header from './Header';
-import { Archive } from 'react-feather';
+import { Archive, Upload } from 'react-feather';
 
 const { ipcRenderer } = require('electron');
 
 const App = () => {
     const [ images, setImages ] = useState([]);
+    const [ uploadButtonIsHovered, setUploadButtonIsHovered ] = useState(false);
 
     useEffect(() => {
         ipcRenderer.send('get-files');
@@ -20,7 +21,7 @@ const App = () => {
     const onDrop = useCallback(event => {
         event.preventDefault();
 
-        const paths = [...event.dataTransfer.files].map(file => {
+        const paths = [ ...event.dataTransfer.files ].map(file => {
             if(file ? file?.path?.length > 0 : false) {
                 return file.path
             }
@@ -47,7 +48,7 @@ const App = () => {
 
     return (
         <div
-            className={ 'overflow-x-hidden p-16 w-full h-full' }
+            className={ 'overflow-x-hidden p-16 w-full h-full relative' }
 
             onDragOver={ event => onDragOver(event) }
             onDrop={ event => onDrop(event) }
@@ -60,6 +61,10 @@ const App = () => {
             </Header>
 
             <ImageList images={ images } onRemove={ path => handleOnRemove(path) }/>
+
+            <div className={`text-background-default cursor-pointer absolute right-16 bottom-16 p-4 transition-all rounded-full bg-primary-default`}>
+                <Upload size={ 24 }/>
+            </div>
         </div>
     );
 };

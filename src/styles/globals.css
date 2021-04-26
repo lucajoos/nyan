@@ -3,16 +3,18 @@
 @tailwind utilities;
 
 :root {
-    --color-background: #181925;
-    --color-highlight: #F5F5F5;
-    --color-selection: #333A48;
+    --color-background-default: #181925;
+    --color-background-accent: #333A48;
+    --color-primary-default: #ff9f1c;
+    --color-primary-accent: #ffaa48;
+    --color-text-default: #F5F5F5;
 }
 
 #root {
     height: 100vh;
     width: 100vw;
 
-    @apply bg-background;
+    @apply bg-background-default;
     @apply rounded-lg;
 }
 

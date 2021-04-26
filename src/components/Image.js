@@ -22,11 +22,11 @@ const Image = ({ path, selected, onRemove }) => {
     return (
         <div onMouseEnter={() => handleHover(true)} onMouseLeave={() => handleHover(false)} className={'cursor-pointer transition-all relative h-full w-full'}>
             <div className={'inline-block relative'}>
-                <div onClick={() => handleOnClickRemove()} className={`absolute -right-4 top-0 p-2 transition-all rounded-full bg-selection opacity-${isHovered ? '100' : '0'} pointer-events-${isHovered ? 'auto' : 'none'}`}>
-                    <X color={'var(--color-highlight)'} />
+                <div onClick={() => handleOnClickRemove()} className={`absolute -right-4 top-0 p-2 transition-all rounded-full bg-background-accent opacity-${isHovered ? '100' : '0'} pointer-events-${isHovered ? 'auto' : 'none'}`}>
+                    <X color={'var(--color-text-default)'} />
                 </div>
 
-                <img className={`rounded-lg mt-5 border-2 transition-colors ${(isHovered || selected) ? 'border-highlight' : 'border-transparent'}`} width={'250px'} src={path} alt={''} onClick={() => handleOnClickImage()}/>
+                <img className={`rounded-lg mt-5 border-2 transition-colors ${(isHovered || selected) ? 'border-primary-default' : 'border-transparent'}`} width={'250px'} src={path} alt={''} onClick={() => handleOnClickImage()}/>
             </div>
         </div>
     )
