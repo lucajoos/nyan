@@ -90,6 +90,12 @@ ipcMain.on('remove', (event, path) => {
     }
 });
 
+ipcMain.on('close', () => {
+    if(!!window) {
+        window.close();
+    }
+});
+
 app.whenReady().then(() => {
     globalShortcut.register('CommandOrControl+M', () => {
         if(!window) {
