@@ -19,10 +19,14 @@
     @apply rounded-lg;
 }
 
-svg {
-    display: inline-block;
+* {
+    outline: none !important;
 }
 
 .webkit-drag {
     -webkit-app-region: drag;
+}
+
+svg {
+    display: inline-block;
 }

@@ -1,14 +1,14 @@
 import Image from './Image';
 import { useCallback } from 'react';
 
-const ImageList = ({ images, onRemove }) => {
+const ImageList = ({ images, onRemove, selected }) => {
     const handleOnRemove = useCallback(path => {
         onRemove(path);
     }, [ images, onRemove ]);
 
-    const items = images?.map(path => {
+    const items = images?.map((path, index) => {
         if(path) {
-            return <Image path={ path } key={ path.toString() } onRemove={ path => handleOnRemove(path) }/>
+            return <Image path={ path } key={ path.toString() } onRemove={ path => handleOnRemove(path) } selected={selected === index} />
         }
     });
 
@@ -16,7 +16,9 @@ const ImageList = ({ images, onRemove }) => {
 };
 
 ImageList.defaultProps = {
-    images: []
+    images: [],
+    onRemove: () => {},
+    selected: -1
 }
 
 export default ImageList;
