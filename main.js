@@ -25,7 +25,7 @@ let init = () => {
 }
 
 app.whenReady().then(() => {
-    globalShortcut.register('CommandOrControl+X', () => {
+    globalShortcut.register('CommandOrControl+M', () => {
         if(!window) {
             init();
         }
