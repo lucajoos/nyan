@@ -1,35 +1,45 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, globalShortcut } = require('electron');
 const { URL } = require('./modules/constants')
 
-let window;
+let window = null;
 
 let init = () => {
     window = new BrowserWindow({
         width: 800,
-        height: 600
+        height: 600,
+        frame: false,
+        show: false
     });
 
-    console.log(URL)
-
-    window.loadURL(URL).then(() => {
-        console.log('APP LOADED')
-    });
+    window.loadURL(URL)
+        .then(() => {
+            window.show();
+        })
+        .catch(e => {
+            throw e;
+        })
 
     window.on('closed', () => {
         window = null;
     });
 }
 
-app.on('ready', init);
+app.whenReady().then(() => {
+    globalShortcut.register('CommandOrControl+X', () => {
+        if(!window) {
+            init();
+        }
+    });
 
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+    init();
 });
 
 app.on('activate', () => {
     if (window === null) {
         init();
     }
+});
+
+app.on('window-all-closed', e => {
+    e.preventDefault();
 });
