@@ -78,9 +78,15 @@ const App = () => {
 
             <ImageList images={ images } onRemove={ path => handleOnRemove(path) }/>
 
-            <label className={'text-background-default cursor-pointer absolute right-16 bottom-16 p-4 transition-all rounded-full bg-primary-default hover:bg-primary-accent'}>
+            {
+                images.length === 0 && <></>
+            }
+
+            <label
+                className={ 'text-background-default cursor-pointer fixed right-16 bottom-16 p-4 transition-all rounded-full bg-primary-default hover:bg-primary-accent' }>
                 <Upload size={ 24 }/>
-                <input className={'hidden'} type={'file'} onChange={event => handleOnInputChange(event)} multiple />
+                <input className={ 'hidden' } type={ 'file' } onChange={ event => handleOnInputChange(event) }
+                       multiple/>
             </label>
         </div>
     );
