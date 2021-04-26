@@ -3,6 +3,11 @@ module.exports = {
   darkMode: false,
   theme: {
     extend: {
+      colors: {
+        background: 'var(--color-background)',
+        highlight: 'var(--color-highlight)'
+      },
+
       gridTemplateColumns: {
         list: 'repeat(auto-fill, minmax(250px, 1fr))'
       },

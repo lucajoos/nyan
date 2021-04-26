@@ -1,17 +1,30 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
+import ImageList from './ImageList';
+import Header from './Header';
 
 const { ipcRenderer } = require('electron');
 
 const App = () => {
+    const [images, setImages] = useState([]);
+
+    useEffect(() => {
+        ipcRenderer.send('get-files');
+
+        ipcRenderer.once('get-files-reply', (event, files) => {
+            setImages(files);
+        });
+    }, []);
+
     const onDrop = useCallback(event => {
         event.preventDefault();
 
         [...event.dataTransfer.files].forEach(file => {
             if(file ? file?.path?.length > 0 : false) {
                 ipcRenderer.invoke('drop-file', file.path)
-                    .then(() => {
-                        console.log('DONE')
-                    })
+                    .then(path => {
+                        setImages(previous => [path, ...previous]);
+                    });
             }
         });
 
@@ -25,12 +38,13 @@ const App = () => {
 
     return (
         <div
-            className={'w-screen h-screen'}
+            className={'overflow-x-hidden p-16 w-full h-full'}
 
             onDragOver={event => onDragOver(event)}
             onDrop={event => onDrop(event)}
         >
-            <h1>Hello</h1>
+            <Header>Select image</Header>
+            <ImageList images={images} />
         </div>
     );
 };

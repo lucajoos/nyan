@@ -1,19 +1,25 @@
 const fs = require('fs');
 const path = require('path');
-const { app, BrowserWindow, globalShortcut, ipcMain } = require('electron');
-const { URL } = require('./modules/constants')
+const { app, BrowserWindow, globalShortcut, ipcMain, clipboard } = require('electron');
+const { URL, RESOURCES_PATH } = require('./modules/constants')
 
 let window = null;
 
+if(!fs.existsSync(RESOURCES_PATH)){
+    fs.mkdirSync(RESOURCES_PATH);
+}
+
 let init = () => {
     window = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1300,
+        height: 820,
         frame: false,
         show: false,
+        transparent: true,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false
+            contextIsolation: false,
+            webSecurity: false
         }
     });
 
@@ -32,26 +38,31 @@ let init = () => {
 
 ipcMain.handle('drop-file', (event, file) => {
     return new Promise((resolve, reject) => {
-        let bp = path.join(__dirname, '/resources/');
         let ex = path.basename(file).split('.');
-        let cc = fs.readdirSync(bp).length;
+        let cc = fs.readdirSync(RESOURCES_PATH).length;
         let pt = `i${cc}.${ex[ex.length - 1]}`;
+        let fp = path.join(RESOURCES_PATH, pt);
 
-        fs.copyFile(file, path.join(bp, pt) , error => {
+        fs.copyFile(file, fp, error => {
             if(error) reject(error);
 
-            resolve(pt);
+            resolve(fp);
         });
     });
 });
 
 ipcMain.on('get-files', event => {
-    let bp = path.join(__dirname, '/resources/');
+    event.reply('get-files-reply', fs.readdirSync(RESOURCES_PATH).map(file => path.join(RESOURCES_PATH, file)).reverse());
+});
 
-    event.reply({
-        path: bp,
-        count: fs.readdirSync(bp).length
-    });
+ipcMain.on('copy', (event, path) => {
+    if(path) {
+        clipboard.writeImage(path);
+
+        if(!!window) {
+            window.close();
+        }
+    }
 });
 
 app.whenReady().then(() => {

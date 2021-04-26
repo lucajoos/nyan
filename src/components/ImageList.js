@@ -1,9 +1,17 @@
+import Image from './Image';
+
 const ImageList = props => {
-    const images = props.images.map(({id, urls}) => {
-        return <img width={'250px'} key={id} src={urls.small} alt={''}/>;
+    const images = props.images?.map(path => {
+        if(path) {
+            return <Image path={path} key={path.toString()} />
+        }
     });
 
-    return <div className={'grid gap-4 grid-cols-list'}>{images}</div>;
+    return <div className={'my-22 grid gap-4 grid-cols-list justify-items-center items-center'}>{images}</div>;
 };
+
+ImageList.defaultProps = {
+    images: []
+}
 
 export default ImageList;
