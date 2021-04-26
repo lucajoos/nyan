@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         background: 'var(--color-background)',
+        selection: 'var(--color-selection)',
         highlight: 'var(--color-highlight)'
       },
 

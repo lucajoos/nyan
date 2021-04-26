@@ -5,6 +5,7 @@
 :root {
     --color-background: #181925;
     --color-highlight: #F5F5F5;
+    --color-selection: #333A48;
 }
 
 #root {
@@ -12,5 +13,13 @@
     width: 100vw;
 
     @apply bg-background;
-    @apply rounded-md;
+    @apply rounded-lg;
+}
+
+svg {
+    display: inline-block;
+}
+
+.webkit-drag {
+    -webkit-app-region: drag;
 }

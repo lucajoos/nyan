@@ -36,18 +36,33 @@ let init = () => {
     });
 };
 
-ipcMain.handle('drop-file', (event, file) => {
+ipcMain.handle('drop', (event, paths) => {
     return new Promise((resolve, reject) => {
-        let ex = path.basename(file).split('.');
-        let cc = fs.readdirSync(RESOURCES_PATH).length;
-        let pt = `i${cc}.${ex[ex.length - 1]}`;
-        let fp = path.join(RESOURCES_PATH, pt);
+        let current = [];
 
-        fs.copyFile(file, fp, error => {
-            if(error) reject(error);
+        let cf = index => {
+            let file = paths[index];
+            let ex = path.basename(file).split('.');
+            let cc = fs.readdirSync(RESOURCES_PATH).length;
+            let pt = `i${cc}.${ex[ex.length - 1]}`;
+            let fp = path.join(RESOURCES_PATH, pt);
 
-            resolve(fp);
-        });
+            current.push(fp);
+
+            fs.copyFile(file, fp, error => {
+                if(error) reject(error);
+
+                if(paths.length === index + 1) {
+                    resolve(current);
+                } else {
+                    cf(index + 1);
+                }
+            });
+        }
+
+        if(paths.length > 0) {
+            cf(0);
+        }
     });
 });
 
@@ -61,6 +76,16 @@ ipcMain.on('copy', (event, path) => {
 
         if(!!window) {
             window.close();
+        }
+    }
+});
+
+ipcMain.on('remove', (event, path) => {
+    if(path) {
+        try {
+            fs.unlinkSync(path);
+        } catch(e) {
+            console.error(e);
         }
     }
 });
