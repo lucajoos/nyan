@@ -1,8 +1,16 @@
 module.exports = {
   purge: [],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: false,
   theme: {
-    extend: {},
+    extend: {
+      gridTemplateColumns: {
+        list: 'repeat(auto-fill, minmax(250px, 1fr))'
+      },
+
+      gridAutoRows: {
+        '200px': '200px',
+      }
+    },
   },
   variants: {
     extend: {},
