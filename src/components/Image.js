@@ -16,17 +16,19 @@ const Image = ({ path, selected, onRemove }) => {
     }, [path]);
 
     const handleHover = useCallback(value => {
-        setIsHover(value || false);
-    }, []);
+        if(isHovered !== value) {
+            setIsHover(value || false);
+        }
+    }, [isHovered]);
 
     return (
-        <div onMouseEnter={() => handleHover(true)} onMouseLeave={() => handleHover(false)} className={'cursor-pointer transition-all relative h-full w-full'}>
+        <div onMouseOver={() => handleHover(true)} onMouseLeave={() => handleHover(false)} className={'pointer-events-none transition-all relative h-full w-full'}>
             <div className={'inline-block relative'}>
-                <div onClick={() => handleOnClickRemove()} className={`absolute -right-4 top-0 p-2 transition-all rounded-full bg-background-accent hover:bg-background-hover opacity-${isHovered ? '100' : '0'} pointer-events-${isHovered ? 'auto' : 'none'}`}>
+                <div onClick={() => handleOnClickRemove()} className={`pointer-events-auto absolute cursor-pointer -right-4 top-0 p-2 transition-all rounded-full bg-background-accent hover:bg-background-hover opacity-${isHovered ? '100' : '0'} pointer-events-${isHovered ? 'auto' : 'none'}`}>
                     <X color={'var(--color-text-default)'} />
                 </div>
 
-                <img className={`rounded-lg mt-5 border-2 transition-colors ${(isHovered || selected) ? 'border-primary-default' : 'border-transparent'}`} width={'250px'} src={path} alt={''} onClick={() => handleOnClickImage()}/>
+                <img className={`pointer-events-auto cursor-pointer rounded-lg mt-5 border-2 transition-colors ${(isHovered || selected) ? 'border-primary-default' : 'border-transparent'}`} width={'250px'} src={path} alt={''} onClick={() => handleOnClickImage()}/>
             </div>
         </div>
     )

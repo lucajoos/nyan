@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import ImageList from './ImageList';
 import Header from './Header';
-import { Archive, Upload } from 'react-feather';
+import { Archive, Frown, Upload } from 'react-feather';
 
 const { ipcRenderer } = require('electron');
 
@@ -79,7 +79,7 @@ const App = () => {
             <ImageList images={ images } onRemove={ path => handleOnRemove(path) }/>
 
             {
-                images.length === 0 && <></>
+                images.length === 0 && <Frown/>
             }
 
             <label
