@@ -77,37 +77,40 @@ ipcMain.on('drop', (event, paths) => {
 
         const file = paths[index];
         const ex = path.basename(file).split('.');
+        const fx = ex[ex.length - 1];
 
-        const pt = `${cc}.${ex[ex.length - 1]}`;
+        const pt = `${cc}.${fx}`;
         const fp = path.join(RESOURCES_PATH, pt);
 
         store.set('length', cc);
 
-        fs.copyFile(file, fp, error => {
-            if(error) throw error;
+        if(/(png|jpg|jpeg|svg|gif|txt)/.test(fx)) {
+            fs.copyFile(file, fp, error => {
+                if(error) throw error;
 
-            event.sender.send('new', fp);
+                event.sender.send('new', fp);
 
-            if(/gif/.test(ex[ex.length - 1])) {
-                gifFrames({ url: file, frames: 0}).then(data => {
-                    const stream = data[0].getImage().pipe(
-                        fs.createWriteStream(path.join(PREVIEWS_PATH, `${cc}.jpg`))
-                    );
+                if(/gif/.test(fx)) {
+                    gifFrames({ url: file, frames: 0}).then(data => {
+                        const stream = data[0].getImage().pipe(
+                            fs.createWriteStream(path.join(PREVIEWS_PATH, `${cc}.jpg`))
+                        );
 
-                    stream.on('end', () => {
-                        if(index < paths.length - 1) {
-                            cf(index + 1);
-                        }
-                    })
-                }).catch(error => {
-                    throw error;
-                });
-            } else {
-                if(index < paths.length - 1) {
-                    cf(index + 1);
+                        stream.on('end', () => {
+                            if(index < paths.length - 1) {
+                                cf(index + 1);
+                            }
+                        })
+                    }).catch(error => {
+                        throw error;
+                    });
+                } else {
+                    if(index < paths.length - 1) {
+                        cf(index + 1);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     if(paths.length > 0) {
@@ -145,6 +148,18 @@ ipcMain.on('copy', (event, file) => {
 
 ipcMain.on('remove', (event, file) => {
     if(file) {
+        const ex = path.basename(file).split('.');
+        const fx = ex[ex.length - 1];
+        const nm = ex.splice(0, ex.length - 1).join('.');
+
+        if(/gif/.test(fx)) {
+            try {
+                fs.unlinkSync(path.join(PREVIEWS_PATH, `${nm}.jpg`));
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
         try {
             fs.unlinkSync(file);
         } catch(e) {
