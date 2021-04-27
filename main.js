@@ -92,15 +92,13 @@ ipcMain.on('drop', (event, paths) => {
 
                 if(/gif/.test(fx)) {
                     gifFrames({ url: file, frames: 0}).then(data => {
-                        const stream = data[0].getImage().pipe(
+                        data[0].getImage().pipe(
                             fs.createWriteStream(path.join(PREVIEWS_PATH, `${cc}.jpg`))
                         );
 
-                        stream.on('end', () => {
-                            if(index < paths.length - 1) {
-                                cf(index + 1);
-                            }
-                        })
+                        if(index < paths.length - 1) {
+                            cf(index + 1);
+                        }
                     }).catch(error => {
                         throw error;
                     });
