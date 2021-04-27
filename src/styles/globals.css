@@ -11,6 +11,20 @@
     --color-text-default: #F5F5F5;
 }
 
+@font-face {
+    font-family: 'OpenSans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../assets/OpenSans/OpenSans-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../assets/OpenSans/OpenSans-Bold.ttf') format('truetype');
+}
+
 #root {
     height: 100vh;
     width: 100vw;
