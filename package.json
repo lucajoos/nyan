@@ -5,6 +5,7 @@
   "private": true,
   "main": "main.js",
   "homepage": "./",
+  "description": "Nyan Meme Picker",
   "author": {
     "name": "Luca Joos",
     "email": "1a85ra7z@gmail.com"
@@ -64,7 +65,9 @@
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "icon": "./src/assets/icons/win/icon.ico"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
