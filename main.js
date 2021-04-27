@@ -16,6 +16,7 @@ let init = () => {
         frame: false,
         show: false,
         transparent: true,
+        icon: './src/assets/icons/win/icon.ico',
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
