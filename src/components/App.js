@@ -108,9 +108,13 @@ const App = () => {
                 if(images[selected]) {
                     ipcRenderer.send('copy', images[selected]);
                 }
-            } else if(event.key === 'Escape' || event.key === 'Backspace') {
+            }
+
+            if(event.key === 'Escape' || event.key === 'Backspace') {
                 setSelected(-1);
-            } else if(event.key === 'Tab') {
+            }
+
+            if(event.key === 'Tab') {
                 if((selected < (images.length - 1)) && !event.shiftKey) {
                     setSelected(current => {
                         return current + 1;
@@ -120,6 +124,10 @@ const App = () => {
                         return current - 1;
                     });
                 }
+            }
+
+            if(event.key === 'v' && event.ctrlKey) {
+
             }
         }
 

@@ -50,8 +50,6 @@ ipcMain.handle('drop', (event, paths) => {
             let pt = `i${cc}.${ex[ex.length - 1]}`;
             let fp = path.join(RESOURCES_PATH, pt);
 
-            current.push(fp);
-
             fs.copyFile(file, fp, error => {
                 if(error) reject(error);
 
