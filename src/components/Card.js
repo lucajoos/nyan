@@ -18,7 +18,7 @@ const Card = ({ path, selected, onRemove }) => {
             if(/(png|jpg|jpeg|svg|gif)/.test(ex)) {
                 setImage(`data:image/${ex};base64,${data.toString('base64')}`);
             } else if(/(txt)/.test(ex)) {
-                setContent(data);
+                setContent(data.toString());
             }
         });
     }, [path]);
@@ -43,29 +43,27 @@ const Card = ({ path, selected, onRemove }) => {
             <div className={'inline-block relative'}>
                 <div
                     onClick={() => handleOnClickRemove()}
-                    className={`pointer-events-auto absolute cursor-pointer -right-4 top-0 p-2 transition-all rounded-full bg-background-accent
-                                hover:bg-background-hover opacity-${isHovered ? '100' : '0'} pointer-events-${isHovered ? 'auto' : 'none'}`}>
+                    className={`pointer-events-auto absolute cursor-pointer -right-4 top-0 p-2 transition-all rounded-full bg-background-accent hover:bg-background-hover opacity-${isHovered ? '100' : '0'} pointer-events-${isHovered ? 'auto' : 'none'}`}>
                     <X color={'var(--color-text-default)'} />
                 </div>
 
-                {
-                    image && (
-                        <img
-                            className={`pointer-events-auto cursor-pointer rounded-lg mt-5 border-2 transition-colors ${(isHovered || selected) ? 'border-primary-default' : 'border-transparent'}`}
-                            width={'250px'}
-                            src={image}
-                            alt={''}
-                            onClick={() => handleOnClickImage()} />
-                    )
-                }
+                <div className={`pointer-events-auto cursor-pointer w-card rounded-lg mt-5 border-2 transition-colors ${(isHovered || selected) ? 'border-primary-default' : 'border-transparent'} ${content ? 'p-12 bg-background-hover text-text-default' : ''}`}>
+                    {
+                        image && (
+                            <img
+                                className={'rounded-lg'}
+                                src={image}
+                                alt={''}
+                                onClick={() => handleOnClickImage()} />
+                        )
+                    }
 
-                {
-                    content && (
-                        <div>
+                    {
+                        content && (
                             <p>{content}</p>
-                        </div>
-                    )
-                }
+                        )
+                    }
+                </div>
             </div>
         </div>
     )

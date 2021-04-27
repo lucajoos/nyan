@@ -82,14 +82,7 @@ const App = () => {
                 }
             });
 
-            ipcRenderer.invoke('drop', paths)
-                .then(current => {
-                    setCards(previous => [ ...current, ...previous ]);
-
-                    if(selected > -1) {
-                        setSelected(0);
-                    }
-                });
+            ipcRenderer.send('drop', paths);
 
             return false;
         }

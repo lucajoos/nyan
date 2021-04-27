@@ -48,14 +48,12 @@ ipcMain.on('paste', event => {
         const ip = path.join(RESOURCES_PATH, `${cc + 1}.png`);
 
         if(text) {
-            fs.writeFile(tp, text, () => {
-
+            fs.writeFile(tp, text, {encoding: 'utf-8'}, () => {
+                event.sender.send('new', tp);
             });
-        }
-
-        if(image) {
+        } else if(image) {
             fs.writeFile(ip, image, () => {
-
+                event.sender.send('new', ip);
             });
         }
     })
