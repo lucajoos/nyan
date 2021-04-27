@@ -15,15 +15,17 @@
     "react-feather": "^2.0.9"
   },
   "scripts": {
-    "start": "electron-forge start",
-    "build": "craco build",
-    "test": "craco test",
-    "eject": "react-scripts eject",
-    "electron": "electron .",
-    "dev": "nf start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "dist": "yarn run build && yarn run make"
+    "start:react": "craco start",
+    "build:react": "craco build",
+    "test:react": "craco test",
+    "eject:react": "react-scripts eject",
+    "start:electron": "electron .",
+    "start:forge": "electron-forge start",
+    "package:forge": "electron-forge package",
+    "make:forge": "electron-forge make",
+    "dist": "yarn run build:react && yarn run make:forge",
+    "wait": "node wait.js",
+    "dev": "nf start"
   },
   "eslintConfig": {
     "extends": [
