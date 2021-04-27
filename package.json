@@ -71,6 +71,15 @@
       },
       "makers": [
         {
+          "name": "@electron-forge/maker-wix",
+          "config": {
+            "language": 1033,
+            "manufacturer": "Luca Joos",
+            "name": "Nyan",
+            "setupIcon": "./src/assets/icons/win/icon.ico"
+          }
+        },
+        {
           "name": "@electron-forge/maker-squirrel",
           "config": {
             "name": "Nyan",
@@ -78,10 +87,7 @@
           }
         },
         {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
+          "name": "@electron-forge/maker-zip"
         },
         {
           "name": "@electron-forge/maker-deb",
