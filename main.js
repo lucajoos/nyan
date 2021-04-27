@@ -39,38 +39,56 @@ let init = () => {
     });
 };
 
-ipcMain.handle('drop', (event, paths) => {
-    return new Promise((resolve, reject) => {
-        let current = [];
+ipcMain.on('paste', event => {
+    const text = clipboard.readText();
+    const image = clipboard.readImage()?.toPNG();
 
-        let cf = index => {
-            const file = paths[index];
-            const ex = path.basename(file).split('.');
+    fs.readdir(RESOURCES_PATH, (error, dir) => {
+        const cc = dir.length;
+        const tp = path.join(RESOURCES_PATH, `${cc}.txt`);
+        const ip = path.join(RESOURCES_PATH, `${cc + 1}.png`);
 
-            fs.readdir(RESOURCES_PATH, (error, dir) => {
-                const cc = dir.length;
+        if(text) {
+            fs.writeFile(tp, text, () => {
 
-                const pt = `i${cc}.${ex[ex.length - 1]}`;
-                const fp = path.join(RESOURCES_PATH, pt);
-
-                current.push(fp);
-
-                fs.copyFile(file, fp, error => {
-                    if(error) reject(error);
-
-                    if(paths.length === index + 1) {
-                        resolve(current.reverse());
-                    } else {
-                        cf(index + 1);
-                    }
-                });
-            })
+            });
         }
 
-        if(paths.length > 0) {
-            cf(0);
+        if(image) {
+            fs.writeFile(ip, image, () => {
+
+            });
         }
-    });
+    })
+})
+
+ipcMain.on('drop', (event, paths) => {
+    console.log(paths)
+    let cf = index => {
+        const file = paths[index];
+        const ex = path.basename(file).split('.');
+
+        fs.readdir(RESOURCES_PATH, (error, dir) => {
+            const cc = dir.length;
+
+            const pt = `${cc}.${ex[ex.length - 1]}`;
+            const fp = path.join(RESOURCES_PATH, pt);
+
+            fs.copyFile(file, fp, error => {
+                if(error) throw error;
+
+                event.sender.send('new', fp);
+
+                if(index < paths.length - 1) {
+                    cf(index + 1);
+                }
+            });
+        })
+    }
+
+    if(paths.length > 0) {
+        cf(0);
+    }
 });
 
 ipcMain.on('get-files', event => {

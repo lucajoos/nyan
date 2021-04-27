@@ -20,6 +20,10 @@ const App = () => {
         ipcRenderer.once('get-files-reply', (event, files) => {
             setImages(files);
         });
+
+        ipcRenderer.on('new', (event, file) => {
+            setImages(previous => [ file, ...previous ]);
+        });
     }, []);
 
     const handleOnDrop = useCallback(event => {
@@ -31,14 +35,7 @@ const App = () => {
             }
         });
 
-        ipcRenderer.invoke('drop', paths)
-            .then(current => {
-                setImages(previous => [ ...current, ...previous ]);
-
-                if(selected > -1) {
-                    setSelected(0);
-                }
-            });
+        ipcRenderer.send('drop', paths);
 
         if(isDragging) {
             setIsDragging(false);
@@ -127,7 +124,7 @@ const App = () => {
             }
 
             if(event.key === 'v' && event.ctrlKey) {
-
+                ipcRenderer.send('paste');
             }
         }
 
