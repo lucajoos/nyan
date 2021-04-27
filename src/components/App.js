@@ -104,7 +104,6 @@ const App = () => {
 
     const handleOnKeyDown = useCallback(event => {
         if(capture.current) {
-            console.log(event)
             if(event.key === 'Enter' && images.length > 0) {
                 if(images[selected]) {
                     ipcRenderer.send('copy', images[selected]);
