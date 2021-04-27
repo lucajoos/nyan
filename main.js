@@ -63,7 +63,6 @@ ipcMain.on('paste', event => {
 })
 
 ipcMain.on('drop', (event, paths) => {
-    console.log(paths)
     let cf = index => {
         const file = paths[index];
         const ex = path.basename(file).split('.');
