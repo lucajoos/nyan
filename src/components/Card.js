@@ -47,20 +47,20 @@ const Card = ({ path, selected, onRemove }) => {
                     <X color={'var(--color-text-default)'} />
                 </div>
 
-                <div className={`pointer-events-auto cursor-pointer w-card rounded-lg mt-5 border-2 transition-colors ${(isHovered || selected) ? 'border-primary-default' : 'border-transparent'} ${content ? 'p-12 bg-background-hover text-text-default' : ''}`}>
+                <div onClick={() => handleOnClickImage()}  className={`pointer-events-auto cursor-pointer w-card rounded-lg mt-5 border-2 transition-colors ${(isHovered || selected) ? 'border-primary-default' : 'border-transparent'} ${content ? 'p-8 bg-background-hover text-text-default' : ''}`}>
                     {
                         image && (
                             <img
                                 className={'rounded-lg'}
                                 src={image}
                                 alt={''}
-                                onClick={() => handleOnClickImage()} />
+                            />
                         )
                     }
 
                     {
                         content && (
-                            <p>{content}</p>
+                            <p className={'overflow-ellipsis overflow-hidden'}>{content}</p>
                         )
                     }
                 </div>

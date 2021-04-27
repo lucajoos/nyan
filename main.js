@@ -1,7 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+const gifFrames = require('gif-frames');
 const { app, BrowserWindow, globalShortcut, ipcMain, clipboard } = require('electron');
-const { URL, RESOURCES_PATH } = require('./modules/constants')
+const { URL, RESOURCES_PATH, PREVIEWS_PATH } = require('./modules/constants')
+const Store = require('electron-store');
 
 if (require('electron-squirrel-startup')) return app.quit();
 
@@ -9,6 +11,16 @@ let window = null;
 
 if(!fs.existsSync(RESOURCES_PATH)){
     fs.mkdirSync(RESOURCES_PATH);
+}
+
+if(!fs.existsSync(PREVIEWS_PATH)){
+    fs.mkdirSync(PREVIEWS_PATH);
+}
+
+const store = new Store();
+
+if(!store.get('length')) {
+    store.set('length', 0);
 }
 
 let init = () => {
@@ -61,25 +73,41 @@ ipcMain.on('paste', event => {
 
 ipcMain.on('drop', (event, paths) => {
     let cf = index => {
+        const cc = store.get('length') + 1;
+
         const file = paths[index];
         const ex = path.basename(file).split('.');
 
-        fs.readdir(RESOURCES_PATH, (error, dir) => {
-            const cc = dir.length;
+        const pt = `${cc}.${ex[ex.length - 1]}`;
+        const fp = path.join(RESOURCES_PATH, pt);
 
-            const pt = `${cc}.${ex[ex.length - 1]}`;
-            const fp = path.join(RESOURCES_PATH, pt);
+        store.set('length', cc);
 
-            fs.copyFile(file, fp, error => {
-                if(error) throw error;
+        fs.copyFile(file, fp, error => {
+            if(error) throw error;
 
-                event.sender.send('new', fp);
+            event.sender.send('new', fp);
 
+            if(/gif/.test(ex[ex.length - 1])) {
+                gifFrames({ url: file, frames: 0}).then(data => {
+                    const stream = data[0].getImage().pipe(
+                        fs.createWriteStream(path.join(PREVIEWS_PATH, `${cc}.jpg`))
+                    );
+
+                    stream.on('end', () => {
+                        if(index < paths.length - 1) {
+                            cf(index + 1);
+                        }
+                    })
+                }).catch(error => {
+                    throw error;
+                });
+            } else {
                 if(index < paths.length - 1) {
                     cf(index + 1);
                 }
-            });
-        })
+            }
+        });
     }
 
     if(paths.length > 0) {
@@ -91,9 +119,23 @@ ipcMain.on('get-files', event => {
     event.reply('get-files-reply', fs.readdirSync(RESOURCES_PATH).map(file => path.join(RESOURCES_PATH, file)).reverse());
 });
 
-ipcMain.on('copy', (event, path) => {
-    if(path) {
-        clipboard.writeImage(path);
+ipcMain.on('copy', (event, file) => {
+    if(file) {
+        const bn = path.basename(file).split('.');
+        const ex = bn[bn.length - 1];
+
+        if(/(png|jpg|jpeg|svg)/.test(ex)) {
+            clipboard.writeImage(file);
+        } else if(/gif/.test(ex)) {
+            const bn = path.basename(file).split('.');
+            const nm = bn.splice(0, bn.length - 1).join('.');
+
+            clipboard.writeImage(path.join(PREVIEWS_PATH, `${nm}.jpg`));
+        } else if(/(txt)/.test(ex)) {
+            fs.readFile(file, {encoding: 'utf-8'}, (error, data) => {
+                clipboard.writeText(data.toString());
+            });
+        }
 
         if(!!window) {
             window.close();
@@ -101,10 +143,10 @@ ipcMain.on('copy', (event, path) => {
     }
 });
 
-ipcMain.on('remove', (event, path) => {
-    if(path) {
+ipcMain.on('remove', (event, file) => {
+    if(file) {
         try {
-            fs.unlinkSync(path);
+            fs.unlinkSync(file);
         } catch(e) {
             console.error(e);
         }
