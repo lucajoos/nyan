@@ -21,8 +21,7 @@ let init = () => {
         icon: './src/assets/icons/win/icon.ico',
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false,
-            webSecurity: false
+            contextIsolation: false
         }
     });
 
