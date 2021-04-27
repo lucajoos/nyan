@@ -6,6 +6,8 @@ module.exports = {
     },
 
     colors: {
+      transparent: "transparent",
+
       background: {
         default: 'var(--color-background-default)',
         hover: 'var(--color-background-hover)',
@@ -23,6 +25,14 @@ module.exports = {
     },
 
     extend: {
+      width: {
+        card: '250px'
+      },
+
+      height: {
+        card: '250px'
+      },
+
       gridTemplateColumns: {
         list: 'repeat(auto-fill, minmax(250px, 1fr))'
       },

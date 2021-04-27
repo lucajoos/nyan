@@ -1,2 +1,2 @@
-react: yarn run start
-start: node ./wait
+react: yarn run start:react
+wait: yarn run wait

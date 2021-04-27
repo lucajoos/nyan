@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import ImageList from './ImageList';
+import CardList from './CardList';
 import Header from './Header';
-import { Archive, File, Upload, Check, X } from 'react-feather';
+import { Archive, File, Upload, Check, X, Settings } from 'react-feather';
 import Text from './Text';
 
 const { ipcRenderer } = require('electron');
@@ -10,7 +10,7 @@ const { ipcRenderer } = require('electron');
 const App = () => {
     const capture = useRef(true);
 
-    const [ images, setImages ] = useState([]);
+    const [ cards, setCards ] = useState([]);
     const [ isDragging, setIsDragging ] = useState(false);
     const [ selected, setSelected ] = useState(0);
 
@@ -18,7 +18,11 @@ const App = () => {
         ipcRenderer.send('get-files');
 
         ipcRenderer.once('get-files-reply', (event, files) => {
-            setImages(files);
+            setCards(files);
+        });
+
+        ipcRenderer.on('new', (event, file) => {
+            setCards(previous => [ file, ...previous ]);
         });
     }, []);
 
@@ -31,14 +35,7 @@ const App = () => {
             }
         });
 
-        ipcRenderer.invoke('drop', paths)
-            .then(current => {
-                setImages(previous => [ ...current, ...previous ]);
-
-                if(selected > -1) {
-                    setSelected(0);
-                }
-            });
+        ipcRenderer.send('drop', paths);
 
         if(isDragging) {
             setIsDragging(false);
@@ -64,7 +61,7 @@ const App = () => {
     }, [isDragging]);
 
     const handleOnRemove = useCallback(path => {
-        setImages(current => {
+        setCards(current => {
             let r = current.filter(value => value !== path);
 
             if(r.length === 0) {
@@ -85,14 +82,7 @@ const App = () => {
                 }
             });
 
-            ipcRenderer.invoke('drop', paths)
-                .then(current => {
-                    setImages(previous => [ ...current, ...previous ]);
-
-                    if(selected > -1) {
-                        setSelected(0);
-                    }
-                });
+            ipcRenderer.send('drop', paths);
 
             return false;
         }
@@ -104,15 +94,18 @@ const App = () => {
 
     const handleOnKeyDown = useCallback(event => {
         if(capture.current) {
-            console.log(event)
-            if(event.key === 'Enter' && images.length > 0) {
-                if(images[selected]) {
-                    ipcRenderer.send('copy', images[selected]);
+            if(event.key === 'Enter' && cards.length > 0) {
+                if(cards[selected]) {
+                    ipcRenderer.send('copy', cards[selected]);
                 }
-            } else if(event.key === 'Escape' || event.key === 'Backspace') {
+            }
+
+            if(event.key === 'Escape' || event.key === 'Backspace') {
                 setSelected(-1);
-            } else if(event.key === 'Tab') {
-                if((selected < (images.length - 1)) && !event.shiftKey) {
+            }
+
+            if(event.key === 'Tab') {
+                if((selected < (cards.length - 1)) && !event.shiftKey) {
                     setSelected(current => {
                         return current + 1;
                     });
@@ -122,6 +115,10 @@ const App = () => {
                     });
                 }
             }
+
+            if(event.key === 'v' && event.ctrlKey) {
+                ipcRenderer.send('paste');
+            }
         }
 
         capture.current = false;
@@ -129,7 +126,7 @@ const App = () => {
         setTimeout(() => {
             capture.current = true;
         }, 100);
-    }, [selected, images]);
+    }, [selected, cards]);
 
     return (
         <div
@@ -159,12 +156,14 @@ const App = () => {
             <div className={`fixed rounded-lg transition-all top-0 bottom-0 right-0 left-0 bg-background-default z-20 pointer-events-none opacity-${isDragging ? '80' : '0'}`}/>
 
             {
-                (images.length === 0 && !isDragging) && <div
-                    className={ 'transition-all text-center absolute top-10 right-0 left-0 bottom-0 flex pointer-events-none justify-center items-center text-background-accent text-background-accent'}>
-                    <div>
+                (cards.length === 0 && !isDragging) && <div
+                    className={ 'transition-all text-center absolute top-24 right-0 left-0 bottom-8 pointer-events-none flex justify-center items-center text-background-accent text-background-accent'}>
+                    <label className={'cursor-pointer pointer-events-auto p-36'}>
                         <File size={ 180 }/>
-                        <Text>Drag'n'Drop some files</Text>
-                    </div>
+                        <Text>Paste something or drop a file</Text>
+                        <input className={ 'hidden' } type={ 'file' } onChange={ event => handleOnInputChange(event) } value={''}
+                               multiple />
+                    </label>
                 </div>
             }
 
@@ -173,14 +172,19 @@ const App = () => {
                 <span className={ 'ml-3' }>Archive</span>
             </Header>
 
-            <ImageList images={ images } onRemove={ path => handleOnRemove(path) } selected={selected} />
+            <CardList cards={ cards } onRemove={ path => handleOnRemove(path) } selected={selected} />
 
-            <label
-                className={ 'text-background-default cursor-pointer fixed right-16 bottom-16 p-4 transition-all rounded-full bg-primary-default hover:bg-primary-accent' }>
-                <Upload size={ 24 }/>
-                <input className={ 'hidden' } type={ 'file' } onChange={ event => handleOnInputChange(event) } value={''}
-                       multiple />
-            </label>
+            <div className={'right-16 bottom-16 fixed flex'}>
+                <label>
+                    <div
+                        className={ 'text-background-default cursor-pointer p-4 transition-all rounded-full bg-primary-default hover:bg-primary-accent' }>
+                        <Upload size={ 24 }/>
+
+                        <input className={ 'hidden' } type={ 'file' } onChange={ event => handleOnInputChange(event) } value={''}
+                               multiple />
+                    </div>
+                </label>
+            </div>
         </div>
     );
 };
