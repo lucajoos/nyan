@@ -1,5 +1,8 @@
 module.exports = {
-  purge: [],
+  purge: [
+    './src/**/*.css',
+    './src/**/*.js',
+  ],
   darkMode: false,
   theme: {
     fontFamily: {
