@@ -44,21 +44,27 @@ ipcMain.handle('drop', (event, paths) => {
         let current = [];
 
         let cf = index => {
-            let file = paths[index];
-            let ex = path.basename(file).split('.');
-            let cc = fs.readdirSync(RESOURCES_PATH).length;
-            let pt = `i${cc}.${ex[ex.length - 1]}`;
-            let fp = path.join(RESOURCES_PATH, pt);
+            const file = paths[index];
+            const ex = path.basename(file).split('.');
 
-            fs.copyFile(file, fp, error => {
-                if(error) reject(error);
+            fs.readdir(RESOURCES_PATH, (error, dir) => {
+                const cc = dir.length;
 
-                if(paths.length === index + 1) {
-                    resolve(current);
-                } else {
-                    cf(index + 1);
-                }
-            });
+                const pt = `i${cc}.${ex[ex.length - 1]}`;
+                const fp = path.join(RESOURCES_PATH, pt);
+
+                current.push(fp);
+
+                fs.copyFile(file, fp, error => {
+                    if(error) reject(error);
+
+                    if(paths.length === index + 1) {
+                        resolve(current.reverse());
+                    } else {
+                        cf(index + 1);
+                    }
+                });
+            })
         }
 
         if(paths.length > 0) {
