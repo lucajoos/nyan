@@ -119,7 +119,7 @@ ipcMain.on('drop', (event, paths) => {
 });
 
 ipcMain.on('get-files', event => {
-    event.reply('get-files-reply', fs.readdirSync(RESOURCES_PATH).map(file => path.join(RESOURCES_PATH, file)).reverse());
+    event.reply('get-files-reply', fs.readdirSync(RESOURCES_PATH).map(file => path.join(RESOURCES_PATH, file)));
 });
 
 ipcMain.on('copy', (event, file) => {

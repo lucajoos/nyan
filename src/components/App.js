@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import CardList from './CardList';
 import Header from './Header';
-import { Archive, File, Upload, Check, X } from 'react-feather';
+import { Archive, File, Upload, Check, X, Settings } from 'react-feather';
 import Text from './Text';
 
 const { ipcRenderer } = require('electron');
@@ -157,11 +157,13 @@ const App = () => {
 
             {
                 (cards.length === 0 && !isDragging) && <div
-                    className={ 'transition-all text-center absolute top-10 right-0 left-0 bottom-0 flex pointer-events-none justify-center items-center text-background-accent text-background-accent'}>
-                    <div>
+                    className={ 'transition-all text-center absolute top-24 right-0 left-0 bottom-8 pointer-events-none flex justify-center items-center text-background-accent text-background-accent'}>
+                    <label className={'cursor-pointer pointer-events-auto p-36'}>
                         <File size={ 180 }/>
-                        <Text>Drag'n'Drop some files</Text>
-                    </div>
+                        <Text>Paste something or drop a file</Text>
+                        <input className={ 'hidden' } type={ 'file' } onChange={ event => handleOnInputChange(event) } value={''}
+                               multiple />
+                    </label>
                 </div>
             }
 
@@ -172,12 +174,17 @@ const App = () => {
 
             <CardList cards={ cards } onRemove={ path => handleOnRemove(path) } selected={selected} />
 
-            <label
-                className={ 'text-background-default cursor-pointer fixed right-16 bottom-16 p-4 transition-all rounded-full bg-primary-default hover:bg-primary-accent' }>
-                <Upload size={ 24 }/>
-                <input className={ 'hidden' } type={ 'file' } onChange={ event => handleOnInputChange(event) } value={''}
-                       multiple />
-            </label>
+            <div className={'right-16 bottom-16 fixed flex'}>
+                <label>
+                    <div
+                        className={ 'text-background-default cursor-pointer p-4 transition-all rounded-full bg-primary-default hover:bg-primary-accent' }>
+                        <Upload size={ 24 }/>
+
+                        <input className={ 'hidden' } type={ 'file' } onChange={ event => handleOnInputChange(event) } value={''}
+                               multiple />
+                    </div>
+                </label>
+            </div>
         </div>
     );
 };
