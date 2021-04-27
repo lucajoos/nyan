@@ -3,6 +3,8 @@ const path = require('path');
 const { app, BrowserWindow, globalShortcut, ipcMain, clipboard } = require('electron');
 const { URL, RESOURCES_PATH } = require('./modules/constants')
 
+if (require('electron-squirrel-startup')) return app.quit();
+
 let window = null;
 
 if(!fs.existsSync(RESOURCES_PATH)){

@@ -11,15 +11,8 @@
     "email": "1a85ra7z@gmail.com"
   },
   "dependencies": {
-    "@craco/craco": "^6.1.1",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
     "electron-squirrel-startup": "^1.0.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-feather": "^2.0.9",
-    "react-scripts": "4.0.3"
+    "react-feather": "^2.0.9"
   },
   "scripts": {
     "start": "electron-forge start",
@@ -29,7 +22,8 @@
     "electron": "electron .",
     "dev": "nf start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "dist": "yarn run build && yarn run make"
   },
   "eslintConfig": {
     "extends": [
@@ -50,6 +44,13 @@
     ]
   },
   "devDependencies": {
+    "@craco/craco": "^6.1.1",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
     "@electron-forge/cli": "^6.0.0-beta.54",
     "@electron-forge/maker-deb": "^6.0.0-beta.54",
     "@electron-forge/maker-rpm": "^6.0.0-beta.54",
@@ -70,15 +71,6 @@
         "asar": true
       },
       "makers": [
-        {
-          "name": "@electron-forge/maker-wix",
-          "config": {
-            "language": 1033,
-            "manufacturer": "Luca Joos",
-            "name": "Nyan",
-            "setupIcon": "./src/assets/icons/win/icon.ico"
-          }
-        },
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
