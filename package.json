@@ -1,9 +1,14 @@
 {
   "name": "nyan",
+  "productName": "Nyan",
   "version": "1.0.0",
   "private": true,
   "main": "main.js",
   "homepage": "./",
+  "author": {
+    "name": "Luca Joos",
+    "email": "1a85ra7z@gmail.com"
+  },
   "dependencies": {
     "@craco/craco": "^6.1.1",
     "@testing-library/jest-dom": "^5.11.4",
@@ -64,7 +69,8 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "nyan"
+            "name": "Nyan",
+            "setupIcon": "./src/assets/icons/win/icon.ico"
           }
         },
         {
