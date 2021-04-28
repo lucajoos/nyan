@@ -1,5 +1,6 @@
 import Card from './Card';
 import { useCallback } from 'react';
+import { Plus } from 'react-feather';
 
 const CardList = ({ cards, onRemove, selected }) => {
     const handleOnRemove = useCallback(path => {
@@ -12,7 +13,14 @@ const CardList = ({ cards, onRemove, selected }) => {
         }
     });
 
-    return <div className={ 'my-22 grid gap-4 grid-cols-list items-center' }>{ items }</div>;
+    return <div className={ 'my-22 grid gap-4 grid-cols-list items-center' }>
+        <Card isFile={false}>
+            <Plus />
+            <span>Add file</span>
+        </Card>
+
+        { items }
+    </div>;
 };
 
 CardList.defaultProps = {
