@@ -117,7 +117,7 @@ ipcMain.on('drop', (event, paths) => {
 });
 
 ipcMain.on('get-files', event => {
-    event.reply('get-files-reply', fs.readdirSync(RESOURCES_PATH).map(file => path.join(RESOURCES_PATH, file)));
+    event.reply('get-files-reply', fs.readdirSync(RESOURCES_PATH).map(file => path.join(RESOURCES_PATH, file)).reverse());
 });
 
 ipcMain.on('copy', (event, file) => {
@@ -142,6 +142,20 @@ ipcMain.on('copy', (event, file) => {
             window.close();
         }
     }
+});
+
+ipcMain.on('new', (event, data) => {
+    const cc = store.get('length') + 1;
+    const pt = `${cc}.txt`;
+    const fp = path.join(RESOURCES_PATH, pt);
+
+    store.set('length', cc);
+
+    fs.writeFile(fp, data, {encoding: 'utf-8'}, error => {
+        if(error) throw error;
+
+        event.sender.send('new', fp);
+    });
 });
 
 ipcMain.on('remove', (event, file) => {

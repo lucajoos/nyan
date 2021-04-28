@@ -15,8 +15,10 @@ const CardList = ({ cards, onRemove, selected }) => {
 
     return <div className={ 'my-22 grid gap-4 grid-cols-list items-center' }>
         <Card isFile={false}>
-            <Plus />
-            <span>Add file</span>
+            <div className={'flex items-center'}>
+                <Plus />
+                <span className={'ml-3'}>Create new card</span>
+            </div>
         </Card>
 
         { items }

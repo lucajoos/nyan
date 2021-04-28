@@ -29,7 +29,7 @@ const Card = ({ children, path, selected, onRemove, isFile }) => {
         if(isFile) {
             ipcRenderer.send('copy', path);
         } else {
-            ipcRenderer.send('new');
+            ipcRenderer.send('new', 'Create new card');
         }
     }, [path]);
 
