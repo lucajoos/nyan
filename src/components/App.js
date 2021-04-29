@@ -1,26 +1,23 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import ImageList from './ImageList';
+import CardList from './CardList';
 import Header from './Header';
-import { Archive, File, Upload, Check, X } from 'react-feather';
+import { Archive, Check, File, Upload, X } from 'react-feather';
 import Text from './Text';
+import GlobalStore from '../store/GlobalStore';
+import { useSnapshot } from 'valtio';
 
 const { ipcRenderer } = require('electron');
+const mousetrap = require('mousetrap');
+
+mousetrap.addKeycodes({
+    43: 'plus'
+});
 
 const App = () => {
-    const capture = useRef(true);
-
-    const [ images, setImages ] = useState([]);
     const [ isDragging, setIsDragging ] = useState(false);
-    const [ selected, setSelected ] = useState(0);
 
-    useEffect(() => {
-        ipcRenderer.send('get-files');
-
-        ipcRenderer.once('get-files-reply', (event, files) => {
-            setImages(files);
-        });
-    }, []);
+    const snap = useSnapshot(GlobalStore);
 
     const handleOnDrop = useCallback(event => {
         event.preventDefault();
@@ -31,21 +28,66 @@ const App = () => {
             }
         });
 
-        ipcRenderer.invoke('drop', paths)
-            .then(current => {
-                setImages(previous => [ ...current, ...previous ]);
-
-                if(selected > -1) {
-                    setSelected(0);
-                }
-            });
+        ipcRenderer.send('drop', paths);
 
         if(isDragging) {
             setIsDragging(false);
         }
 
         return false;
-    }, [isDragging, selected]);
+    }, [ isDragging, snap ]);
+
+    useEffect(() => {
+        mousetrap.bind('enter', () => {
+            if(snap.cards.length > 0 && snap.editing === 0 && snap.cards[snap.selection]) {
+                ipcRenderer.send('copy', snap.cards[snap.selection].path);
+            }
+        });
+
+        mousetrap.bind('esc', () => {
+            GlobalStore.selection = -1;
+        });
+
+        mousetrap.bind('tab', () => {
+            if(!snap.editing) {
+                if(snap.selection < (snap.cards.length - 1)) {
+                    ++GlobalStore.selection;
+                } else {
+                    GlobalStore.selection = snap.cards.length;
+                }
+            }
+        });
+
+        mousetrap.bind('shift+tab', () => {
+            if(!snap.editing && snap.selection >= 0) {
+                --GlobalStore.selection;
+            }
+        });
+
+        mousetrap.bind('ctrl+v', () => {
+            if(!snap.editing) {
+                ipcRenderer.send('paste');
+            }
+        });
+
+        mousetrap.bind(['backspace', 'del'], () => {
+            if(!snap.editing && snap.selection > -1) {
+                ipcRenderer.send('remove', snap.cards[snap.selection].path);
+
+                GlobalStore.cards.splice(snap.selection, 1);
+
+                if(snap.cards.length === 0) {
+                    GlobalStore.selection = -1;
+                } else if(snap.selection > snap.cards.length - 2) {
+                    --GlobalStore.selection;
+                }
+            }
+        });
+
+        mousetrap.bind(['plus'], () => {
+            ipcRenderer.send('new');
+        });
+    }, [snap.cards, snap.editing, snap.selection]);
 
     const handleOnDragOver = useCallback(event => {
         event.preventDefault();
@@ -55,27 +97,13 @@ const App = () => {
         }
 
         return false;
-    }, [isDragging]);
+    }, [ isDragging ]);
 
     const handleOnDragExit = useCallback(() => {
         if(isDragging) {
             setIsDragging(false);
         }
-    }, [isDragging]);
-
-    const handleOnRemove = useCallback(path => {
-        setImages(current => {
-            let r = current.filter(value => value !== path);
-
-            if(r.length === 0) {
-                setSelected(-1)
-            } else {
-                setSelected(0);
-            }
-
-            return r;
-        });
-    }, []);
+    }, [ isDragging ]);
 
     const handleOnInputChange = useCallback(event => {
         if(event?.target?.files?.length > 0) {
@@ -85,86 +113,62 @@ const App = () => {
                 }
             });
 
-            ipcRenderer.invoke('drop', paths)
-                .then(current => {
-                    setImages(previous => [ ...current, ...previous ]);
-
-                    if(selected > -1) {
-                        setSelected(0);
-                    }
-                });
+            ipcRenderer.send('drop', paths);
 
             return false;
         }
-    }, [selected]);
+    }, []);
+
+    const handleOnClickContainer = useCallback(() => {
+        if(snap.selection > -1) {
+            GlobalStore.selection = -1;
+        }
+    }, [snap.selection]);
 
     const handleOnClickQuit = useCallback(() => {
         ipcRenderer.send('close');
     }, []);
-
-    const handleOnKeyDown = useCallback(event => {
-        if(capture.current) {
-            console.log(event)
-            if(event.key === 'Enter' && images.length > 0) {
-                if(images[selected]) {
-                    ipcRenderer.send('copy', images[selected]);
-                }
-            } else if(event.key === 'Escape' || event.key === 'Backspace') {
-                setSelected(-1);
-            } else if(event.key === 'Tab') {
-                if((selected < (images.length - 1)) && !event.shiftKey) {
-                    setSelected(current => {
-                        return current + 1;
-                    });
-                } else if(selected > 0 && event.shiftKey) {
-                    setSelected(current => {
-                        return current - 1;
-                    });
-                }
-            }
-        }
-
-        capture.current = false;
-
-        setTimeout(() => {
-            capture.current = true;
-        }, 100);
-    }, [selected, images]);
 
     return (
         <div
             className={ 'overflow-x-hidden p-16 w-full h-full relative' }
 
             onDragOver={ event => handleOnDragOver(event) }
-            onDragLeave={event => handleOnDragExit(event) }
-
+            onDragLeave={ event => handleOnDragExit(event) }
             onDrop={ event => handleOnDrop(event) }
-            onKeyDown={ event => handleOnKeyDown(event) }
 
-            tabIndex={0}
+            onClick={ () => handleOnClickContainer() }
+
+            tabIndex={ 0 }
         >
             <div className={ 'absolute top-0 left-0 right-0 h-16 webkit-drag' }/>
 
-            <div className={'transition-all text-background-accent absolute top-16 right-16 hover:text-text-default cursor-pointer'} onClick={() => handleOnClickQuit()}>
-                <X size={36}/>
+            <div
+                className={ 'transition-all text-background-accent absolute top-16 right-16 hover:text-text-default cursor-pointer' }
+                onClick={ () => handleOnClickQuit() }>
+                <X size={ 36 }/>
             </div>
 
             <div
-                className={ `z-30 transition-all text-center absolute top-10 right-0 left-0 bottom-0 flex pointer-events-none justify-center items-center text-background-accent text-${isDragging ? 'primary-default' : 'background-accent'} opacity-${isDragging ? '100' : '0'}`}>
+                className={ `z-30 transition-all text-center absolute top-10 right-0 left-0 bottom-0 flex pointer-events-none justify-center items-center text-background-accent text-${ isDragging ? 'primary-default' : 'background-accent' } opacity-${ isDragging ? '100' : '0' }` }>
                 <div>
                     <Check size={ 180 }/>
                 </div>
             </div>
 
-            <div className={`fixed rounded-lg transition-all top-0 bottom-0 right-0 left-0 bg-background-default z-20 pointer-events-none opacity-${isDragging ? '80' : '0'}`}/>
+            <div
+                className={ `fixed rounded-lg transition-all top-0 bottom-0 right-0 left-0 bg-background-default z-20 pointer-events-none opacity-${ isDragging ? '80' : '0' }` }/>
 
             {
-                (images.length === 0 && !isDragging) && <div
-                    className={ 'transition-all text-center absolute top-10 right-0 left-0 bottom-0 flex pointer-events-none justify-center items-center text-background-accent text-background-accent'}>
-                    <div>
+                (snap.cards.length === 0 && !isDragging) && <div
+                    className={ 'transition-all text-center absolute top-24 right-0 left-0 bottom-8 pointer-events-none flex justify-center items-center text-background-accent text-background-accent' }>
+                    <label className={ 'cursor-pointer pointer-events-auto p-36' }>
                         <File size={ 180 }/>
-                        <Text>Drag'n'Drop some files</Text>
-                    </div>
+                        <Text>Paste something or drop a file</Text>
+                        <input className={ 'hidden' } type={ 'file' } onChange={ event => handleOnInputChange(event) }
+                               value={ '' }
+                               multiple/>
+                    </label>
                 </div>
             }
 
@@ -173,14 +177,20 @@ const App = () => {
                 <span className={ 'ml-3' }>Archive</span>
             </Header>
 
-            <ImageList images={ images } onRemove={ path => handleOnRemove(path) } selected={selected} />
+            <CardList/>
 
-            <label
-                className={ 'text-background-default cursor-pointer fixed right-16 bottom-16 p-4 transition-all rounded-full bg-primary-default hover:bg-primary-accent' }>
-                <Upload size={ 24 }/>
-                <input className={ 'hidden' } type={ 'file' } onChange={ event => handleOnInputChange(event) } value={''}
-                       multiple />
-            </label>
+            <div className={ 'right-16 bottom-16 fixed flex' }>
+                <label>
+                    <div
+                        className={ 'text-background-default cursor-pointer p-4 transition-all rounded-full bg-primary-default hover:bg-primary-accent' }>
+                        <Upload size={ 24 }/>
+
+                        <input className={ 'hidden' } type={ 'file' } onChange={ event => handleOnInputChange(event) }
+                               value={ '' }
+                               multiple/>
+                    </div>
+                </label>
+            </div>
         </div>
     );
 };

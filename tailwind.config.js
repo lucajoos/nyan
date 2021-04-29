@@ -2,10 +2,12 @@ module.exports = {
   darkMode: false,
   theme: {
     fontFamily: {
-      sans: [ 'OpenSans' ],
+      sans: [ 'OpenSans' ]
     },
 
     colors: {
+      transparent: "transparent",
+
       background: {
         default: 'var(--color-background-default)',
         hover: 'var(--color-background-hover)',
@@ -23,6 +25,19 @@ module.exports = {
     },
 
     extend: {
+      width: {
+        card: '250px',
+        scrollbar: '5px'
+      },
+
+      height: {
+        card: '250px'
+      },
+
+      maxHeight: {
+        card: '250px'
+      },
+
       gridTemplateColumns: {
         list: 'repeat(auto-fill, minmax(250px, 1fr))'
       },

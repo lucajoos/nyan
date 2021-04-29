@@ -2,14 +2,18 @@ const fs = require('fs');
 const path = require('path');
 const { app, BrowserWindow, globalShortcut, ipcMain, clipboard } = require('electron');
 const { URL, RESOURCES_PATH } = require('./modules/constants')
+const Store = require('electron-store');
 
-if (require('electron-squirrel-startup')) return app.quit();
+if(require('electron-squirrel-startup')) return app.quit();
+
+const store = new Store();
+
+if(!store.get('length')) {
+    store.set('length', 0);
+}
 
 let window = null;
-
-if(!fs.existsSync(RESOURCES_PATH)){
-    fs.mkdirSync(RESOURCES_PATH);
-}
+let focused = true;
 
 let init = () => {
     window = new BrowserWindow({
@@ -21,8 +25,7 @@ let init = () => {
         icon: './src/assets/icons/win/icon.ico',
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false,
-            webSecurity: false
+            contextIsolation: false
         }
     });
 
@@ -37,60 +40,41 @@ let init = () => {
     window.on('closed', () => {
         window = null;
     });
+
+    window.on('blur', () => {
+        focused = false;
+    });
+
+    window.on('focus', () => {
+        focused = true;
+    });
 };
 
-ipcMain.handle('drop', (event, paths) => {
-    return new Promise((resolve, reject) => {
-        let current = [];
+ipcMain.on('paste', event => {
+    const text = clipboard.readText();
+    const image = clipboard.readImage()?.toPNG();
 
-        let cf = index => {
-            let file = paths[index];
-            let ex = path.basename(file).split('.');
-            let cc = fs.readdirSync(RESOURCES_PATH).length;
-            let pt = `i${cc}.${ex[ex.length - 1]}`;
-            let fp = path.join(RESOURCES_PATH, pt);
+    fs.readdir(RESOURCES_PATH, (error, dir) => {
+        const cc = dir.length;
+        const tp = path.join(RESOURCES_PATH, `${ cc }.txt`);
+        const ip = path.join(RESOURCES_PATH, `${ cc + 1 }.png`);
 
-            current.push(fp);
-
-            fs.copyFile(file, fp, error => {
-                if(error) reject(error);
-
-                if(paths.length === index + 1) {
-                    resolve(current);
-                } else {
-                    cf(index + 1);
-                }
+        if(text) {
+            fs.writeFile(tp, text, { encoding: 'utf-8' }, () => {
+                event.sender.send('new', {
+                    path: tp,
+                    editing: true
+                });
+            });
+        } else if(image) {
+            fs.writeFile(ip, image, () => {
+                event.sender.send('new', {
+                    path: ip,
+                    editing: false
+                });
             });
         }
-
-        if(paths.length > 0) {
-            cf(0);
-        }
-    });
-});
-
-ipcMain.on('get-files', event => {
-    event.reply('get-files-reply', fs.readdirSync(RESOURCES_PATH).map(file => path.join(RESOURCES_PATH, file)).reverse());
-});
-
-ipcMain.on('copy', (event, path) => {
-    if(path) {
-        clipboard.writeImage(path);
-
-        if(!!window) {
-            window.close();
-        }
-    }
-});
-
-ipcMain.on('remove', (event, path) => {
-    if(path) {
-        try {
-            fs.unlinkSync(path);
-        } catch(e) {
-            console.error(e);
-        }
-    }
+    })
 });
 
 ipcMain.on('close', () => {
@@ -103,6 +87,10 @@ app.whenReady().then(() => {
     globalShortcut.register('CommandOrControl+M', () => {
         if(!window) {
             init();
+        } else if(focused) {
+            window.close();
+        } else {
+            window.focus();
         }
     });
 
@@ -110,7 +98,7 @@ app.whenReady().then(() => {
 });
 
 app.on('activate', () => {
-    if (window === null) {
+    if(window === null) {
         init();
     }
 });
@@ -118,3 +106,5 @@ app.on('activate', () => {
 app.on('window-all-closed', e => {
     e.preventDefault();
 });
+
+require('./modules/cards')(window);

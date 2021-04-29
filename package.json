@@ -1,29 +1,36 @@
 {
   "name": "nyan",
   "productName": "Nyan",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "main": "main.js",
   "homepage": "./",
-  "description": "Nyan Meme Picker",
+  "description": "Nyan Clipboard",
   "author": {
     "name": "Luca Joos",
     "email": "1a85ra7z@gmail.com"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
-    "react-feather": "^2.0.9"
+    "gif-frames": "^1.0.1",
+    "mousetrap": "^1.6.5",
+    "react-feather": "^2.0.9",
+    "react-markdown": "^6.0.1",
+    "remark-gemoji": "^6.0.0",
+    "valtio": "^1.0.4"
   },
   "scripts": {
-    "start": "electron-forge start",
-    "build": "craco build",
-    "test": "craco test",
-    "eject": "react-scripts eject",
-    "electron": "electron .",
-    "dev": "nf start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "dist": "yarn run build && yarn run make"
+    "start:react": "craco start",
+    "build:react": "craco build",
+    "test:react": "craco test",
+    "eject:react": "react-scripts eject",
+    "start:electron": "electron .",
+    "start:forge": "electron-forge start",
+    "package:forge": "electron-forge package",
+    "make:forge": "electron-forge make",
+    "dist": "yarn run build:react && yarn run make:forge",
+    "wait": "node wait.js",
+    "dev": "nf start"
   },
   "eslintConfig": {
     "extends": [
@@ -45,23 +52,24 @@
   },
   "devDependencies": {
     "@craco/craco": "^6.1.1",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
     "@electron-forge/cli": "^6.0.0-beta.54",
     "@electron-forge/maker-deb": "^6.0.0-beta.54",
     "@electron-forge/maker-rpm": "^6.0.0-beta.54",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
     "autoprefixer": "9",
     "electron": "^12.0.5",
     "electron-store": "^8.0.0",
     "foreman": "^3.0.1",
     "node-fetch": "^2.6.1",
     "postcss": "7",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "sass": "^1.32.12",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat"
   },
   "config": {
