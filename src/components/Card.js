@@ -29,8 +29,8 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
 
     useEffect(() => {
         if(isFile && created) {
-            setIsEditing(true);
             inputRef.current?.focus();
+
             unselect();
         }
     }, [])
@@ -40,7 +40,7 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
             if(isFile) {
                 ipcRenderer.send('copy', path);
             } else {
-                ipcRenderer.send('new', 'Edit this card');
+                ipcRenderer.send('new', '');
             }
         }
     }, [ path, isEditing ]);
@@ -57,7 +57,7 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
             if(content?.length > 0) {
                 ipcRenderer.send('edit', {
                     path: path,
-                    data: content
+                    content: content
                 });
 
                 setIsEditing(false);

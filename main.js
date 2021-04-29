@@ -5,15 +5,15 @@ const { app, BrowserWindow, globalShortcut, ipcMain, clipboard } = require('elec
 const { URL, RESOURCES_PATH, PREVIEWS_PATH } = require('./modules/constants')
 const Store = require('electron-store');
 
-if (require('electron-squirrel-startup')) return app.quit();
+if(require('electron-squirrel-startup')) return app.quit();
 
 let window = null;
 
-if(!fs.existsSync(RESOURCES_PATH)){
+if(!fs.existsSync(RESOURCES_PATH)) {
     fs.mkdirSync(RESOURCES_PATH);
 }
 
-if(!fs.existsSync(PREVIEWS_PATH)){
+if(!fs.existsSync(PREVIEWS_PATH)) {
     fs.mkdirSync(PREVIEWS_PATH);
 }
 
@@ -56,11 +56,11 @@ ipcMain.on('paste', event => {
 
     fs.readdir(RESOURCES_PATH, (error, dir) => {
         const cc = dir.length;
-        const tp = path.join(RESOURCES_PATH, `${cc}.txt`);
-        const ip = path.join(RESOURCES_PATH, `${cc + 1}.png`);
+        const tp = path.join(RESOURCES_PATH, `${ cc }.txt`);
+        const ip = path.join(RESOURCES_PATH, `${ cc + 1 }.png`);
 
         if(text) {
-            fs.writeFile(tp, text, {encoding: 'utf-8'}, () => {
+            fs.writeFile(tp, text, { encoding: 'utf-8' }, () => {
                 event.sender.send('new', {
                     path: tp,
                     editing: true
@@ -85,7 +85,7 @@ ipcMain.on('drop', (event, paths) => {
         const ex = path.basename(file).split('.');
         const fx = ex[ex.length - 1];
 
-        const pt = `${cc}.${fx}`;
+        const pt = `${ cc }.${ fx }`;
         const fp = path.join(RESOURCES_PATH, pt);
 
         store.set('length', cc);
@@ -100,9 +100,9 @@ ipcMain.on('drop', (event, paths) => {
                 });
 
                 if(/gif/.test(fx)) {
-                    gifFrames({ url: file, frames: 0}).then(data => {
+                    gifFrames({ url: file, frames: 0 }).then(data => {
                         data[0].getImage().pipe(
-                            fs.createWriteStream(path.join(PREVIEWS_PATH, `${cc}.jpg`))
+                            fs.createWriteStream(path.join(PREVIEWS_PATH, `${ cc }.jpg`))
                         );
 
                         if(index < paths.length - 1) {
@@ -145,9 +145,9 @@ ipcMain.on('copy', (event, file) => {
             const bn = path.basename(file).split('.');
             const nm = bn.splice(0, bn.length - 1).join('.');
 
-            clipboard.writeImage(path.join(PREVIEWS_PATH, `${nm}.jpg`));
+            clipboard.writeImage(path.join(PREVIEWS_PATH, `${ nm }.jpg`));
         } else if(/(txt)/.test(ex)) {
-            fs.readFile(file, {encoding: 'utf-8'}, (error, data) => {
+            fs.readFile(file, { encoding: 'utf-8' }, (error, data) => {
                 clipboard.writeText(data.toString());
             });
         }
@@ -160,18 +160,24 @@ ipcMain.on('copy', (event, file) => {
 
 ipcMain.on('new', (event, data) => {
     const cc = store.get('length') + 1;
-    const pt = `${cc}.txt`;
+    const pt = `${ cc }.txt`;
     const fp = path.join(RESOURCES_PATH, pt);
 
     store.set('length', cc);
 
-    fs.writeFile(fp, data, {encoding: 'utf-8'}, error => {
+    fs.writeFile(fp, data, { encoding: 'utf-8' }, error => {
         if(error) throw error;
 
         event.sender.send('new', {
             path: fp,
             created: true
         });
+    });
+});
+
+ipcMain.on('edit', (event, { path, content }) => {
+    fs.writeFile(path, content, { encoding: 'utf-8' }, error => {
+        if(error) throw error;
     });
 });
 
@@ -183,7 +189,7 @@ ipcMain.on('remove', (event, file) => {
 
         if(/gif/.test(fx)) {
             try {
-                fs.unlinkSync(path.join(PREVIEWS_PATH, `${nm}.jpg`));
+                fs.unlinkSync(path.join(PREVIEWS_PATH, `${ nm }.jpg`));
             } catch(e) {
                 console.error(e);
             }
@@ -214,7 +220,7 @@ app.whenReady().then(() => {
 });
 
 app.on('activate', () => {
-    if (window === null) {
+    if(window === null) {
         init();
     }
 });
