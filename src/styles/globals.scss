@@ -25,6 +25,17 @@
     src: url('../assets/OpenSans/OpenSans-Bold.ttf') format('truetype');
 }
 
+html body {
+    ::-webkit-scrollbar {
+        width: 7.5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: var(--color-background-accent);
+        border-radius: 9999px;
+    }
+}
+
 #root {
     height: 100vh;
     width: 100vw;

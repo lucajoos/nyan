@@ -26,7 +26,8 @@ module.exports = {
 
     extend: {
       width: {
-        card: '250px'
+        card: '250px',
+        scrollbar: '5px'
       },
 
       height: {
