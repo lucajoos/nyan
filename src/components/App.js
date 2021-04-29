@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import CardList from './CardList';
 import Header from './Header';
@@ -10,7 +10,6 @@ import { useSnapshot } from 'valtio';
 const { ipcRenderer } = require('electron');
 
 const App = () => {
-    const capture = useRef(true);
     const [ isDragging, setIsDragging ] = useState(false);
 
     const snap = useSnapshot(GlobalStore);
@@ -68,41 +67,33 @@ const App = () => {
     }, []);
 
     const handleOnKeyDown = useCallback(event => {
-        if(capture.current) {
-            if(event.key === 'Enter' && snap.cards.length > 0 && snap.editing === 0) {
-                if(snap.cards[snap.selection]) {
-                    ipcRenderer.send('copy', snap.cards[snap.selection].path);
-                }
-            }
-
-            if(event.key === 'Escape' || event.key === 'Backspace') {
-                GlobalStore.selection = -1;
-            }
-
-            if(event.key === 'Tab' && !snap.editing) {
-                if(!event.shiftKey) {
-                    if(snap.selection < (snap.cards.length - 1)) {
-                        ++GlobalStore.selection;
-                    } else {
-                        GlobalStore.selection = snap.cards.length;
-                    }
-                } else if(event.shiftKey) {
-                    if(snap.selection >= 0) {
-                        --GlobalStore.selection;
-                    }
-                }
-            }
-
-            if(event.key === 'v' && event.ctrlKey && !snap.editing) {
-                ipcRenderer.send('paste');
+        if(event.key === 'Enter' && snap.cards.length > 0 && snap.editing === 0) {
+            if(snap.cards[snap.selection]) {
+                ipcRenderer.send('copy', snap.cards[snap.selection].path);
             }
         }
 
-        capture.current = false;
+        if(event.key === 'Escape' || event.key === 'Backspace') {
+            GlobalStore.selection = -1;
+        }
 
-        setTimeout(() => {
-            capture.current = true;
-        }, 100);
+        if(event.key === 'Tab' && !snap.editing) {
+            if(!event.shiftKey) {
+                if(snap.selection < (snap.cards.length - 1)) {
+                    ++GlobalStore.selection;
+                } else {
+                    GlobalStore.selection = snap.cards.length;
+                }
+            } else if(event.shiftKey) {
+                if(snap.selection >= 0) {
+                    --GlobalStore.selection;
+                }
+            }
+        }
+
+        if(event.key === 'v' && event.ctrlKey && !snap.editing) {
+            ipcRenderer.send('paste');
+        }
     }, [ snap.cards, snap.selection, snap.editing ]);
 
     return (
@@ -111,10 +102,9 @@ const App = () => {
 
             onDragOver={ event => handleOnDragOver(event) }
             onDragLeave={ event => handleOnDragExit(event) }
-
             onDrop={ event => handleOnDrop(event) }
-            onKeyDown={ event => handleOnKeyDown(event) }
 
+            onKeyDown={ event => handleOnKeyDown(event) }
             tabIndex={ 0 }
         >
             <div className={ 'absolute top-0 left-0 right-0 h-16 webkit-drag' }/>
@@ -153,7 +143,7 @@ const App = () => {
                 <span className={ 'ml-3' }>Archive</span>
             </Header>
 
-            <CardList />
+            <CardList/>
 
             <div className={ 'right-16 bottom-16 fixed flex' }>
                 <label>

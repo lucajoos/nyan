@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Edit2, X, Check } from 'react-feather';
+import { Check, Edit2, X } from 'react-feather';
 import ReactMarkdown from 'react-markdown'
 import { useSnapshot } from 'valtio';
 import GlobalStore from '../store/GlobalStore';
@@ -50,7 +50,7 @@ const Card = ({ children, index }) => {
         if(inputRef.current && containerRef.current) {
             const resize = () => {
                 inputRef.current.setAttribute('style', 'height: auto;');
-                inputRef.current.setAttribute('style', `height: ${inputRef.current?.scrollHeight}px;`);
+                inputRef.current.setAttribute('style', `height: ${ inputRef.current?.scrollHeight }px;`);
             };
 
             inputRef.current?.removeEventListener('input', resize);
@@ -169,7 +169,7 @@ const Card = ({ children, index }) => {
                 }
 
                 <div onClick={ () => handleOnClick() }
-                     className={ `pointer-events-auto ${!isEditing ? 'cursor-pointer' : ''} transition-all w-card rounded-lg mt-5 transition-colors border-2 ${ ((isHovered || (snap.selection === index && snap.editing === 0)) && !isEditing) ? 'border-primary-default' : 'border-transparent' } ${ !image ? 'p-8 bg-background-hover text-text-default' : '' } ` }>
+                     className={ `pointer-events-auto ${ !isEditing ? 'cursor-pointer' : '' } transition-all w-card rounded-lg mt-5 transition-colors border-2 ${ ((isHovered || (snap.selection === index && snap.editing === 0)) && !isEditing) ? 'border-primary-default' : 'border-transparent' } ${ !image ? 'p-8 bg-background-hover text-text-default' : '' } ` }>
                     {
                         image && (
                             <img
@@ -181,21 +181,22 @@ const Card = ({ children, index }) => {
                     }
 
                     {
-                        isFile && <div className={'relative transition-all'} ref={containerRef}>
-                            <div className={`markdown pointer-events-${isEditing ? 'none absolute opacity-0' : 'auto opacity-100'}`}>
+                        isFile && <div className={ 'relative transition-all' } ref={ containerRef }>
+                            <div
+                                className={ `markdown pointer-events-${ isEditing ? 'none absolute opacity-0' : 'auto opacity-100' }` }>
                                 <ReactMarkdown
-                                    disallowedElements={['img']}
-                                    remarkPlugins={[gemoji]}
+                                    disallowedElements={ [ 'img' ] }
+                                    remarkPlugins={ [ gemoji ] }
                                 >
-                                    {content || ''}
+                                    { content || '' }
                                 </ReactMarkdown>
                             </div>
                             <textarea
-                                className={ `p-0 m-0 overflow-hidden box-border resize-none bg-background-hover border-none overflow-hidden pointer-events-${isEditing ? 'auto opacity-100' : 'none opacity-0 absolute'}` }
+                                className={ `p-0 m-0 overflow-hidden box-border resize-none bg-background-hover border-none overflow-hidden pointer-events-${ isEditing ? 'auto opacity-100' : 'none opacity-0 absolute' }` }
                                 onInput={ event => handleInputChange(event) }
-                                ref={inputRef}
-                                value={content || ''}
-                                disabled={!isEditing}
+                                ref={ inputRef }
+                                value={ content || '' }
+                                disabled={ !isEditing }
                             />
                         </div>
                     }
