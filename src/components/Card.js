@@ -91,8 +91,6 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
         setContent(current);
     }, []);
 
-    console.log(!!image)
-
     return (
         <div onMouseOver={ () => handleHover(true) } onMouseLeave={ () => handleHover(false) }
              className={ 'pointer-events-none transition-all relative h-full w-full' }>
