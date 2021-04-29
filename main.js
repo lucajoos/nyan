@@ -61,11 +61,17 @@ ipcMain.on('paste', event => {
 
         if(text) {
             fs.writeFile(tp, text, {encoding: 'utf-8'}, () => {
-                event.sender.send('new', tp);
+                event.sender.send('new', {
+                    path: tp,
+                    editing: true
+                });
             });
         } else if(image) {
             fs.writeFile(ip, image, () => {
-                event.sender.send('new', ip);
+                event.sender.send('new', {
+                    path: ip,
+                    editing: false
+                });
             });
         }
     })
@@ -88,7 +94,10 @@ ipcMain.on('drop', (event, paths) => {
             fs.copyFile(file, fp, error => {
                 if(error) throw error;
 
-                event.sender.send('new', fp);
+                event.sender.send('new', {
+                    path: fp,
+                    editing: false
+                });
 
                 if(/gif/.test(fx)) {
                     gifFrames({ url: file, frames: 0}).then(data => {
@@ -117,7 +126,12 @@ ipcMain.on('drop', (event, paths) => {
 });
 
 ipcMain.on('get-files', event => {
-    event.reply('get-files-reply', fs.readdirSync(RESOURCES_PATH).map(file => path.join(RESOURCES_PATH, file)).reverse());
+    event.reply('get-files-reply', fs.readdirSync(RESOURCES_PATH).map(file => {
+        return {
+            path: path.join(RESOURCES_PATH, file),
+            editing: false
+        }
+    }).reverse());
 });
 
 ipcMain.on('copy', (event, file) => {
@@ -154,7 +168,10 @@ ipcMain.on('new', (event, data) => {
     fs.writeFile(fp, data, {encoding: 'utf-8'}, error => {
         if(error) throw error;
 
-        event.sender.send('new', fp);
+        event.sender.send('new', {
+            path: fp,
+            created: true
+        });
     });
 });
 

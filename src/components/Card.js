@@ -1,14 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
-import { X } from 'react-feather';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Edit2, X, Check } from 'react-feather';
 
 const { ipcRenderer } = require('electron');
 const fs = require('fs');
-const {basename} = require('path');
+const { basename } = require('path');
 
-const Card = ({ children, path, selected, onRemove, isFile }) => {
-    const [isHovered, setIsHover] = useState(false);
-    const [content, setContent] = useState(null);
-    const [image, setImage] = useState(null);
+const Card = ({ children, path, selected, onRemove, isFile, unselect, select, created, index }) => {
+    const [ isHovered, setIsHover ] = useState(false);
+    const [ content, setContent ] = useState(null);
+    const [ image, setImage ] = useState(null);
+    const [ isEditing, setIsEditing ] = useState(created || false);
+    const inputRef = useRef(null);
 
     useEffect(() => {
         if(isFile) {
@@ -17,62 +19,145 @@ const Card = ({ children, path, selected, onRemove, isFile }) => {
                 const ex = bn[bn.length - 1];
 
                 if(/(png|jpg|jpeg|svg|gif)/.test(ex)) {
-                    setImage(`data:image/${ex};base64,${data.toString('base64')}`);
+                    setImage(`data:image/${ ex };base64,${ data.toString('base64') }`);
                 } else if(/(txt)/.test(ex)) {
                     setContent(data.toString());
                 }
             });
         }
-    }, [path, isFile]);
+    }, [ path, isFile ]);
+
+    useEffect(() => {
+        if(isFile && created) {
+            setIsEditing(true);
+            inputRef.current?.focus();
+            unselect();
+        }
+    }, [])
 
     const handleOnClick = useCallback(() => {
-        if(isFile) {
-            ipcRenderer.send('copy', path);
-        } else {
-            ipcRenderer.send('new', 'Create new card');
+        if(!isEditing) {
+            if(isFile) {
+                ipcRenderer.send('copy', path);
+            } else {
+                ipcRenderer.send('new', 'Edit this card');
+            }
         }
-    }, [path]);
+    }, [ path, isEditing ]);
 
     const handleOnClickRemove = useCallback(() => {
         if(isFile) {
             ipcRenderer.send('remove', path);
             onRemove(path);
         }
-    }, [path]);
+    }, [ path, isFile ]);
+
+    const handleOnClickSubmit = useCallback(() => {
+        if(isFile) {
+            if(content?.length > 0) {
+                ipcRenderer.send('edit', {
+                    path: path,
+                    data: content
+                });
+
+                setIsEditing(false);
+
+                setTimeout(() => {
+                    select(index || 0);
+                }, 150);
+            } else {
+                handleOnClickRemove();
+            }
+        }
+    }, [ path, isFile, content, index ]);
+
+    const handleOnClickEdit = useCallback(() => {
+        if(isFile) {
+            setIsEditing(true);
+            inputRef.current?.focus();
+            unselect();
+        }
+    }, [])
 
     const handleHover = useCallback(value => {
         if(isHovered !== value) {
             setIsHover(value || false);
         }
-    }, [isHovered]);
+    }, [ isHovered ]);
+
+    const handleInputChange = useCallback(event => {
+        const current = event.target.value;
+
+        setContent(current);
+    }, []);
+
+    console.log(!!image)
 
     return (
-        <div onMouseOver={() => handleHover(true)} onMouseLeave={() => handleHover(false)} className={'pointer-events-none transition-all relative h-full w-full'}>
-            <div className={'inline-block relative'}>
+        <div onMouseOver={ () => handleHover(true) } onMouseLeave={ () => handleHover(false) }
+             className={ 'pointer-events-none transition-all relative h-full w-full' }>
+            <div className={ 'inline-block relative' }>
                 {
                     isFile && (
-                        <div
-                            onClick={() => handleOnClickRemove()}
-                            className={`pointer-events-auto absolute cursor-pointer -right-4 top-0 p-2 transition-all rounded-full bg-background-accent hover:bg-background-hover opacity-${isHovered ? '100' : '0'} pointer-events-${isHovered ? 'auto' : 'none'}`}>
-                            <X color={'var(--color-text-default)'} />
+                        <div className={ 'absolute -right-4 top-0 flex' }>
+                            {
+                                isEditing && (
+                                    <div
+                                        onClick={ () => handleOnClickSubmit() }
+                                        className={ `pointer-events-auto cursor-pointer p-2 transition-all rounded-full bg-background-accent hover:bg-background-hover opacity-100 pointer-events-auto` }>
+                                        <Check color={ 'var(--color-text-default)' }/>
+                                    </div>
+                                )
+                            }
+
+                            {
+                                !image && !isEditing && (
+                                    <div
+                                        onClick={ () => handleOnClickEdit() }
+                                        className={ `pointer-events-auto cursor-pointer p-2 transition-all rounded-full bg-background-accent hover:bg-background-hover opacity-${ isHovered ? '100' : '0' } pointer-events-${ isHovered ? 'auto' : 'none' }` }>
+                                        <Edit2 color={ 'var(--color-text-default)' }/>
+                                    </div>
+                                )
+                            }
+
+                            {
+                                !isEditing && (
+                                    <div
+                                        onClick={ () => handleOnClickRemove() }
+                                        className={ `ml-2 pointer-events-auto cursor-pointer p-2 transition-all rounded-full bg-background-accent hover:bg-background-hover opacity-${ isHovered ? '100' : '0' } pointer-events-${ isHovered ? 'auto' : 'none' }` }>
+                                        <X color={ 'var(--color-text-default)' }/>
+                                    </div>
+                                )
+                            }
                         </div>
                     )
                 }
 
-                <div onClick={() => handleOnClick()}  className={`pointer-events-auto cursor-pointer w-card rounded-lg mt-5 border-2 transition-colors ${(isHovered || selected) ? 'border-primary-default' : 'border-transparent'} ${(content || !isFile) ? 'p-8 bg-background-hover text-text-default' : ''}`}>
+                <div onClick={ () => handleOnClick() }
+                     className={ `pointer-events-auto ${!isEditing ? 'cursor-pointer' : ''} transition-all w-card rounded-lg mt-5 transition-colors ${ ((isHovered || selected) && !isEditing) ? 'border-primary-default' : 'border-transparent' } ${ !image ? 'p-8 bg-background-hover text-text-default' : '' } ${ !isFile ? 'bg-primary-default hover:bg-primary-accent' : 'border-2' }` }>
                     {
                         image && (
                             <img
-                                className={'rounded-lg'}
-                                src={image}
-                                alt={''}
+                                className={ 'rounded-lg' }
+                                src={ image }
+                                alt={ '' }
                             />
                         )
                     }
 
                     {
-                        (content || !isFile) && (
-                            <p className={'overflow-ellipsis overflow-hidden'}>{content || children}</p>
+                        isFile && <textarea
+                            className={ `p-0 m-0 resize-none bg-background-hover border-none overflow-hidden pointer-events-${isEditing ? 'auto' : 'none'}` }
+                            value={ content || '' }
+                            onInput={ event => handleInputChange(event) }
+                            ref={inputRef}
+                            disabled={!isEditing}
+                        />
+                    }
+
+                    {
+                        !isFile && (
+                            <p className={ 'overflow-ellipsis overflow-hidden' }>{ children }</p>
                         )
                     }
                 </div>
@@ -83,7 +168,9 @@ const Card = ({ children, path, selected, onRemove, isFile }) => {
 
 Card.defaultProps = {
     path: '',
-    isFile: true
+    isFile: true,
+    unselect: () => {},
+    select: () => {}
 };
 
 export default Card;

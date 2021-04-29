@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import CardList from './CardList';
 import Header from './Header';
-import { Archive, File, Upload, Check, X, Settings } from 'react-feather';
+import { Archive, File, Upload, Check, X } from 'react-feather';
 import Text from './Text';
 
 const { ipcRenderer } = require('electron');
@@ -24,6 +24,14 @@ const App = () => {
         ipcRenderer.on('new', (event, file) => {
             setCards(previous => [ file, ...previous ]);
         });
+    }, []);
+
+    const unselect = useCallback(() => {
+        setSelected(-1);
+    }, []);
+
+    const select = useCallback(id => {
+        setSelected(id || 0);
     }, []);
 
     const handleOnDrop = useCallback(event => {
@@ -62,7 +70,7 @@ const App = () => {
 
     const handleOnRemove = useCallback(path => {
         setCards(current => {
-            let r = current.filter(value => value !== path);
+            let r = current.filter(value => value.path !== path);
 
             if(r.length === 0) {
                 setSelected(-1)
@@ -172,7 +180,7 @@ const App = () => {
                 <span className={ 'ml-3' }>Archive</span>
             </Header>
 
-            <CardList cards={ cards } onRemove={ path => handleOnRemove(path) } selected={selected} />
+            <CardList cards={ cards } onRemove={ path => handleOnRemove(path) } selected={selected} unselect={unselect} select={select} />
 
             <div className={'right-16 bottom-16 fixed flex'}>
                 <label>
