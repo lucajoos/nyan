@@ -22,18 +22,20 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
                     setImage(`data:image/${ ex };base64,${ data.toString('base64') }`);
                 } else if(/(txt)/.test(ex)) {
                     setContent(data.toString());
+
+                    inputRef.current?.addEventListener('input', () => {
+                        inputRef.current.setAttribute('style', 'height: auto;');
+                        inputRef.current.setAttribute('style', `height: ${inputRef.current?.scrollHeight}px;`)
+                    });
+
+                    if(created) {
+                        inputRef.current?.focus();
+                        unselect();
+                    }
                 }
             });
         }
     }, [ path, isFile ]);
-
-    useEffect(() => {
-        if(isFile && created) {
-            inputRef.current?.focus();
-
-            unselect();
-        }
-    }, [])
 
     const handleOnClick = useCallback(() => {
         if(!isEditing) {
@@ -145,10 +147,10 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
 
                     {
                         isFile && <textarea
-                            className={ `p-0 m-0 resize-none bg-background-hover border-none overflow-hidden pointer-events-${isEditing ? 'auto' : 'none'}` }
-                            value={ content || '' }
+                            className={ `p-0 m-0 box-border resize-none bg-background-hover border-none overflow-hidden pointer-events-${isEditing ? 'auto' : 'none'}` }
                             onInput={ event => handleInputChange(event) }
                             ref={inputRef}
+                            value={content || ''}
                             disabled={!isEditing}
                         />
                     }
