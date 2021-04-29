@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import CardList from './CardList';
 import Header from './Header';
@@ -8,6 +8,7 @@ import GlobalStore from '../store/GlobalStore';
 import { useSnapshot } from 'valtio';
 
 const { ipcRenderer } = require('electron');
+const mousetrap = require('mousetrap');
 
 const App = () => {
     const [ isDragging, setIsDragging ] = useState(false);
@@ -31,6 +32,40 @@ const App = () => {
 
         return false;
     }, [ isDragging, snap ]);
+
+    useEffect(() => {
+        mousetrap.bind('enter', () => {
+            if(snap.cards.length > 0 && snap.editing === 0 && snap.cards[snap.selection]) {
+                ipcRenderer.send('copy', snap.cards[snap.selection].path);
+            }
+        });
+
+        mousetrap.bind('esc', () => {
+            GlobalStore.selection = -1;
+        });
+
+        mousetrap.bind('tab', () => {
+            if(!snap.editing) {
+                if(snap.selection < (snap.cards.length - 1)) {
+                    ++GlobalStore.selection;
+                } else {
+                    GlobalStore.selection = snap.cards.length;
+                }
+            }
+        });
+
+        mousetrap.bind('shift+tab', () => {
+            if(!snap.editing && snap.selection >= 0) {
+                --GlobalStore.selection;
+            }
+        });
+
+        mousetrap.bind('ctrl+v', () => {
+            if(!snap.editing) {
+                ipcRenderer.send('paste');
+            }
+        });
+    }, [snap.cards, snap.editing, snap.selection])
 
     const handleOnDragOver = useCallback(event => {
         event.preventDefault();
@@ -66,36 +101,6 @@ const App = () => {
         ipcRenderer.send('close');
     }, []);
 
-    const handleOnKeyDown = useCallback(event => {
-        if(event.key === 'Enter' && snap.cards.length > 0 && snap.editing === 0) {
-            if(snap.cards[snap.selection]) {
-                ipcRenderer.send('copy', snap.cards[snap.selection].path);
-            }
-        }
-
-        if(event.key === 'Escape' || event.key === 'Backspace') {
-            GlobalStore.selection = -1;
-        }
-
-        if(event.key === 'Tab' && !snap.editing) {
-            if(!event.shiftKey) {
-                if(snap.selection < (snap.cards.length - 1)) {
-                    ++GlobalStore.selection;
-                } else {
-                    GlobalStore.selection = snap.cards.length;
-                }
-            } else if(event.shiftKey) {
-                if(snap.selection >= 0) {
-                    --GlobalStore.selection;
-                }
-            }
-        }
-
-        if(event.key === 'v' && event.ctrlKey && !snap.editing) {
-            ipcRenderer.send('paste');
-        }
-    }, [ snap.cards, snap.selection, snap.editing ]);
-
     return (
         <div
             className={ 'overflow-x-hidden p-16 w-full h-full relative' }
@@ -104,7 +109,6 @@ const App = () => {
             onDragLeave={ event => handleOnDragExit(event) }
             onDrop={ event => handleOnDrop(event) }
 
-            onKeyDown={ event => handleOnKeyDown(event) }
             tabIndex={ 0 }
         >
             <div className={ 'absolute top-0 left-0 right-0 h-16 webkit-drag' }/>

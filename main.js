@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { app, BrowserWindow, globalShortcut, ipcMain, clipboard, Menu, MenuItem } = require('electron');
+const { app, BrowserWindow, globalShortcut, ipcMain, clipboard } = require('electron');
 const { URL, RESOURCES_PATH } = require('./modules/constants')
 const Store = require('electron-store');
 
