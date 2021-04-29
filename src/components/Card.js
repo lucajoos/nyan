@@ -32,7 +32,7 @@ const Card = ({ children, index }) => {
 
                 if(/(png|jpg|jpeg|svg|gif)/.test(ex)) {
                     setImage(`data:image/${ ex };base64,${ data.toString('base64') }`);
-                } else if(/(txt)/.test(ex)) {
+                } else if(/(md|txt)/.test(ex)) {
                     setContent(data.toString());
 
                     if(created) {

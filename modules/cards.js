@@ -21,7 +21,7 @@ module.exports = window => {
 
             store.set('length', cc);
 
-            if(/(png|jpg|jpeg|svg|gif|txt)/.test(fx)) {
+            if(/(png|jpg|jpeg|svg|gif|md|txt)/.test(fx)) {
                 fs.copyFile(file, fp, error => {
                     if(error) throw error;
 
@@ -77,7 +77,7 @@ module.exports = window => {
                 const nm = bn.splice(0, bn.length - 1).join('.');
 
                 clipboard.writeImage(path.join(PREVIEWS_PATH, `${ nm }.jpg`));
-            } else if(/(txt)/.test(ex)) {
+            } else if(/(md|txt)/.test(ex)) {
                 fs.readFile(file, { encoding: 'utf-8' }, (error, data) => {
                     clipboard.writeText(data.toString());
                 });
@@ -91,7 +91,7 @@ module.exports = window => {
 
     ipcMain.on('new', event => {
         const cc = store.get('length') + 1;
-        const pt = `${ cc }.txt`;
+        const pt = `${ cc }.md`;
         const fp = path.join(RESOURCES_PATH, pt);
 
         store.set('length', cc);
