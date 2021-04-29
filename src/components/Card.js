@@ -89,7 +89,7 @@ const Card = ({ children, path, selected, onRemove, isFile, select, created, ind
     const handleOnClickEdit = useCallback(() => {
         if(isFile) {
             setIsEditing(true);
-            unselect();
+            select(-1);
 
             setTimeout(() => {
                 inputRef.current?.focus();
