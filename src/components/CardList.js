@@ -32,7 +32,7 @@ const CardList = () => {
         <div
             className={ 'my-22 grid gap-4 grid-cols-list items-center overflow-hidden' }>
             <Card>
-                <div className={ 'flex items-center' }>
+                <div className={ 'flex items-center select-none' }>
                     <Plus/>
                     <span className={ 'ml-2' }>Create new card</span>
                 </div>

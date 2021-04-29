@@ -179,7 +179,7 @@ const Card = ({ children, index }) => {
                     {
                         image && (
                             <img
-                                className={ 'rounded-lg' }
+                                className={ 'rounded-lg select-none' }
                                 src={ image }
                                 alt={ '' }
                             />
@@ -189,7 +189,7 @@ const Card = ({ children, index }) => {
                     {
                         isFile && <div className={ 'relative transition-all' } ref={ containerRef }>
                             <div
-                                className={ `markdown pointer-events-${ isEditing ? 'none absolute opacity-0' : 'auto opacity-100' }` }>
+                                className={ `markdown pointer-events-${ isEditing ? 'none absolute opacity-0' : 'auto opacity-100' } select-none` }>
                                 <ReactMarkdown
                                     disallowedElements={ [ 'img' ] }
                                     remarkPlugins={ [ gemoji ] }
