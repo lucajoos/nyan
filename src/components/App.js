@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import CardList from './CardList';
 import Header from './Header';
@@ -14,18 +14,6 @@ const App = () => {
     const [ isDragging, setIsDragging ] = useState(false);
 
     const snap = useSnapshot(GlobalStore);
-
-    useEffect(() => {
-        ipcRenderer.send('get-files');
-
-        ipcRenderer.once('get-files-reply', (event, files) => {
-            GlobalStore.cards = files;
-        });
-
-        ipcRenderer.on('new', (event, file) => {
-            GlobalStore.cards.unshift(file);
-        });
-    }, []);
 
     const handleOnDrop = useCallback(event => {
         event.preventDefault();

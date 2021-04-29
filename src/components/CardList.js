@@ -1,11 +1,25 @@
 import Card from './Card';
-import { useCallback } from 'react';
 import { Plus } from 'react-feather';
 import { useSnapshot } from 'valtio';
 import GlobalStore from '../store/GlobalStore';
+import { useEffect } from 'react';
+
+const { ipcRenderer } = require('electron');
 
 const CardList = () => {
     const snap = useSnapshot(GlobalStore);
+
+    useEffect(() => {
+        ipcRenderer.send('get-files');
+
+        ipcRenderer.once('get-files-reply', (event, files) => {
+            GlobalStore.cards = files;
+        });
+
+        ipcRenderer.on('new', (event, file) => {
+            GlobalStore.cards.unshift(file);
+        });
+    }, []);
 
     const items = snap.cards?.map(({path, created=false}, index) => {
         if(path) {
