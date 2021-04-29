@@ -1,13 +1,17 @@
 import Card from './Card';
 import { useCallback } from 'react';
 import { Plus } from 'react-feather';
+import { useSnapshot } from 'valtio';
+import GlobalStore from '../store/GlobalStore';
 
-const CardList = ({ cards, onRemove }) => {
+const CardList = ({ onRemove }) => {
+    const snap = useSnapshot(GlobalStore);
+
     const handleOnRemove = useCallback(path => {
         onRemove(path);
     }, []);
 
-    const items = cards?.map(({path, created=false}, index) => {
+    const items = snap.cards?.map(({path, created=false}, index) => {
         if(path) {
             return <Card path={ path } key={ path.toString() } created={created} onRemove={ path => handleOnRemove(path) } index={index} />
         }

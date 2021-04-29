@@ -11,10 +11,7 @@ const { ipcRenderer } = require('electron');
 
 const App = () => {
     const capture = useRef(true);
-
-    const [ cards, setCards ] = useState([]);
     const [ isDragging, setIsDragging ] = useState(false);
-    const [ selected, setSelected ] = useState(0);
 
     const snap = useSnapshot(GlobalStore);
 
@@ -22,11 +19,11 @@ const App = () => {
         ipcRenderer.send('get-files');
 
         ipcRenderer.once('get-files-reply', (event, files) => {
-            setCards(files);
+            GlobalStore.cards = files;
         });
 
         ipcRenderer.on('new', (event, file) => {
-            setCards(previous => [ file, ...previous ]);
+            GlobalStore.cards.unshift(file);
         });
     }, []);
 
@@ -65,18 +62,16 @@ const App = () => {
     }, [ isDragging ]);
 
     const handleOnRemove = useCallback(path => {
-        setCards(current => {
-            let r = current.filter(value => value.path !== path);
+        let r = GlobalStore.cards.filter(value => value.path !== path);
 
-            if(r.length === 0) {
-                GlobalStore.selection = -1;
-            } else {
-                GlobalStore.selection = 0;
-            }
+        if(r.length === 0) {
+            GlobalStore.selection = -1;
+        } else {
+            GlobalStore.selection = 0;
+        }
 
-            return r;
-        });
-    }, []);
+        GlobalStore.cards = r;
+    }, [snap.cards]);
 
     const handleOnInputChange = useCallback(event => {
         if(event?.target?.files?.length > 0) {
@@ -98,9 +93,9 @@ const App = () => {
 
     const handleOnKeyDown = useCallback(event => {
         if(capture.current) {
-            if(event.key === 'Enter' && cards.length > 0 && !snap.editing) {
-                if(cards[snap.selection]) {
-                    ipcRenderer.send('copy', cards[snap.selection]);
+            if(event.key === 'Enter' && snap.cards.length > 0 && snap.editing === 0) {
+                if(snap.cards[snap.selection]) {
+                    ipcRenderer.send('copy', snap.cards[snap.selection].path);
                 }
             }
 
@@ -110,10 +105,10 @@ const App = () => {
 
             if(event.key === 'Tab' && !snap.editing) {
                 if(!event.shiftKey) {
-                    if(snap.selection < (cards.length - 1)) {
+                    if(snap.selection < (snap.cards.length - 1)) {
                         ++GlobalStore.selection;
                     } else {
-                        GlobalStore.selection = cards.length;
+                        GlobalStore.selection = snap.cards.length;
                     }
                 } else if(event.shiftKey) {
                     if(snap.selection >= 0) {
@@ -132,7 +127,7 @@ const App = () => {
         setTimeout(() => {
             capture.current = true;
         }, 100);
-    }, [ cards, snap.selection, snap.editing ]);
+    }, [ snap.cards, snap.selection, snap.editing ]);
 
     return (
         <div
@@ -165,7 +160,7 @@ const App = () => {
                 className={ `fixed rounded-lg transition-all top-0 bottom-0 right-0 left-0 bg-background-default z-20 pointer-events-none opacity-${ isDragging ? '80' : '0' }` }/>
 
             {
-                (cards.length === 0 && !isDragging) && <div
+                (snap.cards.length === 0 && !isDragging) && <div
                     className={ 'transition-all text-center absolute top-24 right-0 left-0 bottom-8 pointer-events-none flex justify-center items-center text-background-accent text-background-accent' }>
                     <label className={ 'cursor-pointer pointer-events-auto p-36' }>
                         <File size={ 180 }/>
@@ -182,7 +177,7 @@ const App = () => {
                 <span className={ 'ml-3' }>Archive</span>
             </Header>
 
-            <CardList cards={ cards } onRemove={ path => handleOnRemove(path) }/>
+            <CardList onRemove={ path => handleOnRemove(path) }/>
 
             <div className={ 'right-16 bottom-16 fixed flex' }>
                 <label>
