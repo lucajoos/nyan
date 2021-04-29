@@ -8,7 +8,7 @@ const { basename } = require('path');
 
 const gemoji = require('remark-gemoji');
 
-const Card = ({ children, path, selected, onRemove, isFile, unselect, select, created, index }) => {
+const Card = ({ children, path, selected, onRemove, isFile, select, created, index }) => {
     const [ isHovered, setIsHover ] = useState(false);
     const [ content, setContent ] = useState(null);
     const [ image, setImage ] = useState(null);
@@ -29,7 +29,7 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
 
                     if(created) {
                         inputRef.current?.focus();
-                        unselect();
+                        select(-1);
                     }
                 }
             });

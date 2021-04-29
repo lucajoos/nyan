@@ -26,10 +26,6 @@ const App = () => {
         });
     }, []);
 
-    const unselect = useCallback(() => {
-        setSelected(-1);
-    }, []);
-
     const select = useCallback(id => {
         setSelected(id || 0);
     }, []);
@@ -180,7 +176,7 @@ const App = () => {
                 <span className={ 'ml-3' }>Archive</span>
             </Header>
 
-            <CardList cards={ cards } onRemove={ path => handleOnRemove(path) } selected={selected} unselect={unselect} select={select} />
+            <CardList cards={ cards } onRemove={ path => handleOnRemove(path) } selected={selected} select={select} />
 
             <div className={'right-16 bottom-16 fixed flex'}>
                 <label>
