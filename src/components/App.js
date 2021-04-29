@@ -87,7 +87,7 @@ const App = () => {
         mousetrap.bind(['plus'], () => {
             ipcRenderer.send('new');
         });
-    }, [snap.cards, snap.editing, snap.selection])
+    }, [snap.cards, snap.editing, snap.selection]);
 
     const handleOnDragOver = useCallback(event => {
         event.preventDefault();
@@ -119,6 +119,12 @@ const App = () => {
         }
     }, []);
 
+    const handleOnClickContainer = useCallback(() => {
+        if(snap.selection > -1) {
+            GlobalStore.selection = -1;
+        }
+    }, [snap.selection]);
+
     const handleOnClickQuit = useCallback(() => {
         ipcRenderer.send('close');
     }, []);
@@ -130,6 +136,8 @@ const App = () => {
             onDragOver={ event => handleOnDragOver(event) }
             onDragLeave={ event => handleOnDragExit(event) }
             onDrop={ event => handleOnDrop(event) }
+
+            onClick={ () => handleOnClickContainer() }
 
             tabIndex={ 0 }
         >
