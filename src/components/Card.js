@@ -10,7 +10,7 @@ const { basename } = require('path');
 
 const gemoji = require('remark-gemoji');
 
-const Card = ({ children, path, onRemove, isFile, created, index }) => {
+const Card = ({ children, path, index, created, isFile }) => {
     const [ isHovered, setIsHover ] = useState(false);
     const [ content, setContent ] = useState(null);
     const [ image, setImage ] = useState(null);
@@ -69,7 +69,16 @@ const Card = ({ children, path, onRemove, isFile, created, index }) => {
     const handleOnClickRemove = useCallback(() => {
         if(isFile) {
             ipcRenderer.send('remove', path);
-            onRemove(path);
+
+            let r = GlobalStore.cards.filter(value => value.path !== path);
+
+            if(r.length === 0) {
+                GlobalStore.selection = -1;
+            } else {
+                GlobalStore.selection = 0;
+            }
+
+            GlobalStore.cards = r;
         }
     }, []);
 

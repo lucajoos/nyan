@@ -61,18 +61,6 @@ const App = () => {
         }
     }, [ isDragging ]);
 
-    const handleOnRemove = useCallback(path => {
-        let r = GlobalStore.cards.filter(value => value.path !== path);
-
-        if(r.length === 0) {
-            GlobalStore.selection = -1;
-        } else {
-            GlobalStore.selection = 0;
-        }
-
-        GlobalStore.cards = r;
-    }, [snap.cards]);
-
     const handleOnInputChange = useCallback(event => {
         if(event?.target?.files?.length > 0) {
             const paths = [ ...event.target.files ].map(file => {
@@ -177,7 +165,7 @@ const App = () => {
                 <span className={ 'ml-3' }>Archive</span>
             </Header>
 
-            <CardList onRemove={ path => handleOnRemove(path) }/>
+            <CardList />
 
             <div className={ 'right-16 bottom-16 fixed flex' }>
                 <label>
