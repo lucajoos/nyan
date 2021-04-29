@@ -2,12 +2,13 @@ import Card from './Card';
 import { Plus } from 'react-feather';
 import { useSnapshot } from 'valtio';
 import GlobalStore from '../store/GlobalStore';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 const { ipcRenderer } = require('electron');
 
 const CardList = () => {
     const snap = useSnapshot(GlobalStore);
+    const containerRef = useRef(null);
 
     useEffect(() => {
         ipcRenderer.send('get-files');
@@ -27,16 +28,18 @@ const CardList = () => {
         }
     });
 
-    return <div className={ 'my-22 grid gap-4 grid-cols-list items-center' }>
-        <Card>
-            <div className={'flex items-center'}>
-                <Plus />
-                <span className={'ml-2'}>Create new card</span>
-            </div>
-        </Card>
+    return (
+        <div className={ 'my-22 grid gap-4 grid-cols-list items-center overflow-hidden' }>
+            <Card>
+                <div className={'flex items-center'}>
+                    <Plus />
+                    <span className={'ml-2'}>Create new card</span>
+                </div>
+            </Card>
 
-        { items }
-    </div>;
+            { items }
+        </div>
+    );
 };
 
 export default CardList;

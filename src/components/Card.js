@@ -130,7 +130,7 @@ const Card = ({ children, index }) => {
 
     return (
         <div onMouseOver={ () => handleHover(true) } onMouseLeave={ () => handleHover(false) }
-             className={ 'pointer-events-none transition-all relative h-full w-full' }>
+             className={ 'pointer-events-none transition-all relative h-full w-full overflow-hidden' }>
             <div className={ 'inline-block relative' }>
                 {
                     isFile && (
