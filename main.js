@@ -1,21 +1,12 @@
 const fs = require('fs');
 const path = require('path');
-const gifFrames = require('gif-frames');
-const { app, BrowserWindow, globalShortcut, ipcMain, clipboard } = require('electron');
-const { URL, RESOURCES_PATH, PREVIEWS_PATH } = require('./modules/constants')
+const { app, BrowserWindow, globalShortcut, ipcMain, clipboard, Menu, MenuItem } = require('electron');
+const { URL, RESOURCES_PATH } = require('./modules/constants')
 const Store = require('electron-store');
 
 if(require('electron-squirrel-startup')) return app.quit();
 
 let window = null;
-
-if(!fs.existsSync(RESOURCES_PATH)) {
-    fs.mkdirSync(RESOURCES_PATH);
-}
-
-if(!fs.existsSync(PREVIEWS_PATH)) {
-    fs.mkdirSync(PREVIEWS_PATH);
-}
 
 const store = new Store();
 
