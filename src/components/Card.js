@@ -76,15 +76,18 @@ const Card = ({ children, index }) => {
 
             let r = GlobalStore.cards.filter(value => value.path !== path);
 
-            if(r.length === 0) {
+            console.log(snap.selection);
+            console.log(snap.cards.length)
+
+            if(snap.cards.length === 0) {
                 GlobalStore.selection = -1;
-            } else {
-                GlobalStore.selection = 0;
+            } else if(snap.selection > snap.cards.length - 2) {
+                --GlobalStore.selection;
             }
 
             GlobalStore.cards = r;
         }
-    }, []);
+    }, [snap.cards, snap.selection]);
 
     const handleSubmit = useCallback(() => {
         if(isFile) {

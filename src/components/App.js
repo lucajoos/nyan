@@ -65,6 +65,20 @@ const App = () => {
                 ipcRenderer.send('paste');
             }
         });
+
+        mousetrap.bind(['backspace', 'del'], () => {
+            if(!snap.editing && snap.selection > -1) {
+                ipcRenderer.send('remove', snap.cards[snap.selection].path);
+
+                GlobalStore.cards.splice(snap.selection, 1);
+
+                if(snap.cards.length === 0) {
+                    GlobalStore.selection = -1;
+                } else if(snap.selection > snap.cards.length - 2) {
+                    --GlobalStore.selection;
+                }
+            }
+        });
     }, [snap.cards, snap.editing, snap.selection])
 
     const handleOnDragOver = useCallback(event => {
