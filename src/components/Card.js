@@ -86,7 +86,7 @@ const Card = ({ children, index }) => {
         }
     }, []);
 
-    const handleOnClickSubmit = useCallback(() => {
+    const handleSubmit = useCallback(() => {
         if(isFile) {
             if(content?.trim()?.length > 0) {
                 ipcRenderer.send('edit', {
@@ -128,6 +128,12 @@ const Card = ({ children, index }) => {
         setContent(current);
     }, []);
 
+    const handleKeyPress = useCallback(event => {
+        if(isEditing && event.key === 'Enter') {
+            handleSubmit();
+        }
+    }, [isEditing, content]);
+
     return (
         <div onMouseOver={ () => handleHover(true) } onMouseLeave={ () => handleHover(false) }
              className={ 'pointer-events-none transition-all relative h-full w-full overflow-hidden' }>
@@ -138,7 +144,7 @@ const Card = ({ children, index }) => {
                             {
                                 isEditing && (
                                     <div
-                                        onClick={ () => handleOnClickSubmit() }
+                                        onClick={ () => handleSubmit() }
                                         className={ `pointer-events-auto cursor-pointer p-2 transition-all rounded-full bg-background-accent hover:bg-background-hover opacity-100 pointer-events-auto` }>
                                         <Check color={ 'var(--color-text-default)' }/>
                                     </div>
@@ -197,6 +203,7 @@ const Card = ({ children, index }) => {
                                 ref={ inputRef }
                                 value={ content || '' }
                                 disabled={ !isEditing }
+                                onKeyPress={ event => handleKeyPress(event) }
                             />
                         </div>
                     }
