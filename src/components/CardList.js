@@ -2,7 +2,7 @@ import Card from './Card';
 import { Plus } from 'react-feather';
 import { useSnapshot } from 'valtio';
 import GlobalStore from '../store/GlobalStore';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 
 const { ipcRenderer } = require('electron');
 
@@ -14,6 +14,10 @@ const CardList = () => {
 
         ipcRenderer.once('get-files-reply', (event, files) => {
             GlobalStore.cards = files;
+
+            if(files.length > 0) {
+                GlobalStore.selection = 0;
+            }
         });
 
         ipcRenderer.on('new', (event, file) => {
