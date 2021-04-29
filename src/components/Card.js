@@ -10,15 +10,19 @@ const { basename } = require('path');
 
 const gemoji = require('remark-gemoji');
 
-const Card = ({ children, path, index, created, isFile }) => {
+const Card = ({ children, index }) => {
+    const snap = useSnapshot(GlobalStore);
+    const path = snap.cards[index]?.path;
+    const created = snap.cards[index]?.created || false;
+    const isFile = !!path;
+
     const [ isHovered, setIsHover ] = useState(false);
     const [ content, setContent ] = useState(null);
     const [ image, setImage ] = useState(null);
     const [ isEditing, setIsEditing ] = useState(created || false);
+
     const inputRef = useRef(null);
     const containerRef = useRef(null);
-
-    const snap = useSnapshot(GlobalStore);
 
     useEffect(() => {
         if(isFile) {
@@ -205,13 +209,6 @@ const Card = ({ children, path, index, created, isFile }) => {
             </div>
         </div>
     )
-};
-
-Card.defaultProps = {
-    path: '',
-    isFile: true,
-    unselect: () => {},
-    select: () => {}
 };
 
 export default Card;

@@ -23,12 +23,12 @@ const CardList = () => {
 
     const items = snap.cards?.map(({path, created=false}, index) => {
         if(path) {
-            return <Card path={ path } key={ path.toString() } created={created} index={index} />
+            return <Card key={ path.toString() } index={index} />
         }
     });
 
     return <div className={ 'my-22 grid gap-4 grid-cols-list items-center' }>
-        <Card isFile={false}>
+        <Card>
             <div className={'flex items-center'}>
                 <Plus />
                 <span className={'ml-2'}>Create new card</span>
@@ -38,11 +38,5 @@ const CardList = () => {
         { items }
     </div>;
 };
-
-CardList.defaultProps = {
-    images: [],
-    onRemove: () => {},
-    selected: -1
-}
 
 export default CardList;
