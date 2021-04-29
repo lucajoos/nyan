@@ -34,6 +34,10 @@ module.exports = {
         card: '250px'
       },
 
+      maxHeight: {
+        card: '250px'
+      },
+
       gridTemplateColumns: {
         list: 'repeat(auto-fill, minmax(250px, 1fr))'
       },

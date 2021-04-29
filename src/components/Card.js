@@ -189,7 +189,7 @@ const Card = ({ children, index }) => {
                     {
                         isFile && <div className={ 'relative transition-all' } ref={ containerRef }>
                             <div
-                                className={ `markdown pointer-events-${ isEditing ? 'none absolute opacity-0' : 'auto opacity-100' } select-none` }>
+                                className={ `markdown overflow-x-hidden pointer-events-${ isEditing ? 'none absolute opacity-0' : 'auto opacity-100' } select-none max-h-card` }>
                                 <ReactMarkdown
                                     disallowedElements={ [ 'img' ] }
                                     remarkPlugins={ [ gemoji ] }
@@ -198,7 +198,7 @@ const Card = ({ children, index }) => {
                                 </ReactMarkdown>
                             </div>
                             <textarea
-                                className={ `p-0 m-0 overflow-hidden box-border resize-none bg-background-hover border-none overflow-hidden pointer-events-${ isEditing ? 'auto opacity-100' : 'none opacity-0 absolute' }` }
+                                className={ `p-0 m-0 overflow-x-hidden box-border resize-none bg-background-hover border-none pointer-events-${ isEditing ? 'auto opacity-100' : 'none opacity-0 absolute'} max-h-card` }
                                 onInput={ event => handleInputChange(event) }
                                 ref={ inputRef }
                                 value={ content || '' }
