@@ -163,7 +163,7 @@ const Card = ({ children, path, selected, onRemove, isFile, select, created, ind
 
                     {
                         isFile && <div className={'relative transition-all'} ref={containerRef}>
-                            <div className={`markdown ${isEditing ? 'absolute opacity-0' : 'opacity-100'}`}>
+                            <div className={`markdown pointer-events-${isEditing ? 'none absolute opacity-0' : 'auto opacity-100'}`}>
                                 <ReactMarkdown
                                     disallowedElements={['img']}
                                     remarkPlugins={[gemoji]}
