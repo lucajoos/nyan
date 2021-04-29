@@ -129,7 +129,7 @@ const Card = ({ children, index }) => {
     }, []);
 
     const handleKeyPress = useCallback(event => {
-        if(isEditing && event.key === 'Enter') {
+        if(isEditing && event.key === 'Enter' && event.shiftKey) {
             handleSubmit();
         }
     }, [isEditing, content]);
