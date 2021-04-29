@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Edit2, X, Check } from 'react-feather';
+import ReactMarkdown from 'react-markdown'
 
 const { ipcRenderer } = require('electron');
 const fs = require('fs');
 const { basename } = require('path');
+
+const gemoji = require('remark-gemoji');
 
 const Card = ({ children, path, selected, onRemove, isFile, unselect, select, created, index }) => {
     const [ isHovered, setIsHover ] = useState(false);
@@ -11,6 +14,7 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
     const [ image, setImage ] = useState(null);
     const [ isEditing, setIsEditing ] = useState(created || false);
     const inputRef = useRef(null);
+    const containerRef = useRef(null);
 
     useEffect(() => {
         if(isFile) {
@@ -21,15 +25,7 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
                 if(/(png|jpg|jpeg|svg|gif)/.test(ex)) {
                     setImage(`data:image/${ ex };base64,${ data.toString('base64') }`);
                 } else if(/(txt)/.test(ex)) {
-                    const resize = () => {
-                        inputRef.current.setAttribute('style', 'height: auto;');
-                        inputRef.current.setAttribute('style', `height: ${inputRef.current?.scrollHeight}px;`)
-                    };
-
                     setContent(data.toString());
-                    inputRef.current?.addEventListener('input', resize);
-
-                    resize();
 
                     if(created) {
                         inputRef.current?.focus();
@@ -38,7 +34,21 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
                 }
             });
         }
-    }, [ path, isFile ]);
+    }, []);
+
+    useEffect(() => {
+        if(inputRef.current && containerRef.current) {
+            const resize = () => {
+                inputRef.current.setAttribute('style', 'height: auto;');
+                inputRef.current.setAttribute('style', `height: ${inputRef.current?.scrollHeight}px;`);
+            };
+
+            inputRef.current?.removeEventListener('input', resize);
+            inputRef.current?.addEventListener('input', resize);
+
+            resize();
+        }
+    }, [ isEditing ])
 
     const handleOnClick = useCallback(() => {
         if(!isEditing) {
@@ -48,14 +58,14 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
                 ipcRenderer.send('new');
             }
         }
-    }, [ path, isEditing ]);
+    }, [ isEditing ]);
 
     const handleOnClickRemove = useCallback(() => {
         if(isFile) {
             ipcRenderer.send('remove', path);
             onRemove(path);
         }
-    }, [ path, isFile ]);
+    }, []);
 
     const handleOnClickSubmit = useCallback(() => {
         if(isFile) {
@@ -74,7 +84,7 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
                 handleOnClickRemove();
             }
         }
-    }, [ path, isFile, content, index ]);
+    }, [ content ]);
 
     const handleOnClickEdit = useCallback(() => {
         if(isFile) {
@@ -152,13 +162,23 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
                     }
 
                     {
-                        isFile && <textarea
-                            className={ `p-0 m-0 box-border resize-none bg-background-hover border-none overflow-hidden pointer-events-${isEditing ? 'auto' : 'none'}` }
-                            onInput={ event => handleInputChange(event) }
-                            ref={inputRef}
-                            value={content || ''}
-                            disabled={!isEditing}
-                        />
+                        isFile && <div className={'relative transition-all'} ref={containerRef}>
+                            <div className={`markdown ${isEditing ? 'absolute opacity-0' : 'opacity-100'}`}>
+                                <ReactMarkdown
+                                    disallowedElements={['img']}
+                                    remarkPlugins={[gemoji]}
+                                >
+                                    {content || ''}
+                                </ReactMarkdown>
+                            </div>
+                            <textarea
+                                className={ `p-0 m-0 overflow-hidden box-border resize-none bg-background-hover border-none overflow-hidden pointer-events-${isEditing ? 'auto opacity-100' : 'none opacity-0 absolute'}` }
+                                onInput={ event => handleInputChange(event) }
+                                ref={inputRef}
+                                value={content || ''}
+                                disabled={!isEditing}
+                            />
+                        </div>
                     }
 
                     {

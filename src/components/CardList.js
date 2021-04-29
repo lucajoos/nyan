@@ -5,7 +5,7 @@ import { Plus } from 'react-feather';
 const CardList = ({ cards, onRemove, selected, unselect, select }) => {
     const handleOnRemove = useCallback(path => {
         onRemove(path);
-    }, [ cards, onRemove ]);
+    }, []);
 
     const items = cards?.map(({path, created=false}, index) => {
         if(path) {

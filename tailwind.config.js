@@ -2,7 +2,7 @@ module.exports = {
   darkMode: false,
   theme: {
     fontFamily: {
-      sans: [ 'OpenSans' ],
+      sans: [ 'OpenSans' ]
     },
 
     colors: {

@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --color-background-default: #181925;
+    --color-background-hover: #282B3E;
+    --color-background-accent: #383C57;
+    --color-primary-default: #ff9f1c;
+    --color-primary-accent: #E08300;
+    --color-text-default: #F5F5F5;
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../assets/OpenSans/OpenSans-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../assets/OpenSans/OpenSans-Bold.ttf') format('truetype');
+}
+
+#root {
+    height: 100vh;
+    width: 100vw;
+
+    @apply bg-background-default;
+    @apply rounded-lg;
+}
+
+* {
+    outline: none !important;
+}
+
+.webkit-drag {
+    -webkit-app-region: drag;
+}
+
+svg {
+    display: inline-block;
+}
+
+.markdown {
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: bold;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+    }
+
+    h3 {
+        font-size: 1.6rem;
+    }
+
+    h4 {
+        font-size: 1.4rem;
+    }
+
+    h5 {
+        font-size: 1.2rem;
+    }
+}
