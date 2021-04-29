@@ -175,7 +175,7 @@ const Card = ({ children, index }) => {
                 }
 
                 <div onClick={ () => handleOnClick() }
-                     className={ `pointer-events-auto ${ !isEditing ? 'cursor-pointer' : '' } transition-all w-card rounded-lg mt-5 transition-colors border-2 ${ ((isHovered || (snap.selection === index && snap.editing === 0)) && !isEditing) ? 'border-primary-default' : 'border-transparent' } ${ !image ? 'p-8 bg-background-hover text-text-default' : '' } ` }>
+                     className={ `pointer-events-auto ${ !isEditing ? 'cursor-pointer' : '' } transition-all w-card rounded-lg mt-5 transition-colors border-2 ${ (isHovered || snap.selection === index) ? 'border-primary-default' : 'border-transparent' } ${ !image ? 'p-8 bg-background-hover text-text-default' : '' } ` }>
                     {
                         image && (
                             <img
