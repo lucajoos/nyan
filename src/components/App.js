@@ -10,6 +10,10 @@ import { useSnapshot } from 'valtio';
 const { ipcRenderer } = require('electron');
 const mousetrap = require('mousetrap');
 
+mousetrap.addKeycodes({
+    43: 'plus'
+});
+
 const App = () => {
     const [ isDragging, setIsDragging ] = useState(false);
 
@@ -78,6 +82,10 @@ const App = () => {
                     --GlobalStore.selection;
                 }
             }
+        });
+
+        mousetrap.bind(['plus'], () => {
+            ipcRenderer.send('new');
         });
     }, [snap.cards, snap.editing, snap.selection])
 

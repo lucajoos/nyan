@@ -76,9 +76,6 @@ const Card = ({ children, index }) => {
 
             let r = GlobalStore.cards.filter(value => value.path !== path);
 
-            console.log(snap.selection);
-            console.log(snap.cards.length)
-
             if(snap.cards.length === 0) {
                 GlobalStore.selection = -1;
             } else if(snap.selection > snap.cards.length - 2) {
