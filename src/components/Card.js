@@ -132,7 +132,7 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
                 }
 
                 <div onClick={ () => handleOnClick() }
-                     className={ `pointer-events-auto ${!isEditing ? 'cursor-pointer' : ''} transition-all w-card rounded-lg mt-5 transition-colors ${ ((isHovered || selected) && !isEditing) ? 'border-primary-default' : 'border-transparent' } ${ !image ? 'p-8 bg-background-hover text-text-default' : '' } ${ !isFile ? 'bg-primary-default hover:bg-primary-accent' : 'border-2' }` }>
+                     className={ `pointer-events-auto ${!isEditing ? 'cursor-pointer' : ''} transition-all w-card rounded-lg mt-5 transition-colors border-2 ${ ((isHovered || selected) && !isEditing) ? 'border-primary-default' : 'border-transparent' } ${ !image ? 'p-8 bg-background-hover text-text-default' : '' } ` }>
                     {
                         image && (
                             <img
