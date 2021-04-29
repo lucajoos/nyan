@@ -6,13 +6,14 @@ const Store = require('electron-store');
 
 if(require('electron-squirrel-startup')) return app.quit();
 
-let window = null;
-
 const store = new Store();
 
 if(!store.get('length')) {
     store.set('length', 0);
 }
+
+let window = null;
+let focused = true;
 
 let init = () => {
     window = new BrowserWindow({
@@ -38,6 +39,14 @@ let init = () => {
 
     window.on('closed', () => {
         window = null;
+    });
+
+    window.on('blur', () => {
+        focused = false;
+    });
+
+    window.on('focus', () => {
+        focused = true;
     });
 };
 
@@ -66,7 +75,7 @@ ipcMain.on('paste', event => {
             });
         }
     })
-})
+});
 
 ipcMain.on('close', () => {
     if(!!window) {
@@ -78,6 +87,10 @@ app.whenReady().then(() => {
     globalShortcut.register('CommandOrControl+M', () => {
         if(!window) {
             init();
+        } else if(focused) {
+            window.close();
+        } else {
+            window.focus();
         }
     });
 
