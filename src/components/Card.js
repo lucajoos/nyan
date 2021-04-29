@@ -33,7 +33,9 @@ const Card = ({ children, path, onRemove, isFile, created, index }) => {
 
                     if(created) {
                         inputRef.current?.focus();
+
                         GlobalStore.selection = -1;
+                        ++GlobalStore.editing;
                     }
                 }
             });
@@ -80,24 +82,19 @@ const Card = ({ children, path, onRemove, isFile, created, index }) => {
                 });
 
                 setIsEditing(false);
-
-                setTimeout(() => {
-                    GlobalStore.selection = index || 0;
-                }, 150);
+                GlobalStore.selection = index || 0;
             } else {
                 handleOnClickRemove();
             }
         }
 
         --GlobalStore.editing;
-        console.log(GlobalStore.editing)
-    }, [ content ]);
+    }, [ content, index ]);
 
     const handleOnClickEdit = useCallback(() => {
         if(isFile) {
             setIsEditing(true);
 
-            GlobalStore.selection = -1;
             ++GlobalStore.editing;
 
             setTimeout(() => {
@@ -192,7 +189,7 @@ const Card = ({ children, path, onRemove, isFile, created, index }) => {
 
                     {
                         !isFile && (
-                            <p className={ 'overflow-ellipsis overflow-hidden' }>{ children }</p>
+                            <div className={ 'overflow-ellipsis overflow-hidden' }>{ children }</div>
                         )
                     }
                 </div>
