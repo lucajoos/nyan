@@ -2,14 +2,14 @@ import Card from './Card';
 import { useCallback } from 'react';
 import { Plus } from 'react-feather';
 
-const CardList = ({ cards, onRemove, selected, select }) => {
+const CardList = ({ cards, onRemove }) => {
     const handleOnRemove = useCallback(path => {
         onRemove(path);
     }, []);
 
     const items = cards?.map(({path, created=false}, index) => {
         if(path) {
-            return <Card path={ path } key={ path.toString() } created={created} onRemove={ path => handleOnRemove(path) } selected={selected === index} select={select} index={index} />
+            return <Card path={ path } key={ path.toString() } created={created} onRemove={ path => handleOnRemove(path) } index={index} />
         }
     });
 

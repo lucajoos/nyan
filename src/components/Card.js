@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Edit2, X, Check } from 'react-feather';
 import ReactMarkdown from 'react-markdown'
+import { useSnapshot } from 'valtio';
+import GlobalStore from '../store/GlobalStore';
 
 const { ipcRenderer } = require('electron');
 const fs = require('fs');
@@ -8,13 +10,15 @@ const { basename } = require('path');
 
 const gemoji = require('remark-gemoji');
 
-const Card = ({ children, path, selected, onRemove, isFile, select, created, index }) => {
+const Card = ({ children, path, onRemove, isFile, created, index }) => {
     const [ isHovered, setIsHover ] = useState(false);
     const [ content, setContent ] = useState(null);
     const [ image, setImage ] = useState(null);
     const [ isEditing, setIsEditing ] = useState(created || false);
     const inputRef = useRef(null);
     const containerRef = useRef(null);
+
+    const snap = useSnapshot(GlobalStore);
 
     useEffect(() => {
         if(isFile) {
@@ -29,7 +33,7 @@ const Card = ({ children, path, selected, onRemove, isFile, select, created, ind
 
                     if(created) {
                         inputRef.current?.focus();
-                        select(-1);
+                        GlobalStore.selection = -1;
                     }
                 }
             });
@@ -78,18 +82,21 @@ const Card = ({ children, path, selected, onRemove, isFile, select, created, ind
                 setIsEditing(false);
 
                 setTimeout(() => {
-                    select(index || 0);
+                    GlobalStore.selection = index || 0;
                 }, 150);
             } else {
                 handleOnClickRemove();
             }
         }
+
+        GlobalStore.editing = false;
     }, [ content ]);
 
     const handleOnClickEdit = useCallback(() => {
         if(isFile) {
             setIsEditing(true);
-            select(-1);
+            GlobalStore.selection = -1;
+            GlobalStore.editing = true;
 
             setTimeout(() => {
                 inputRef.current?.focus();
@@ -150,7 +157,7 @@ const Card = ({ children, path, selected, onRemove, isFile, select, created, ind
                 }
 
                 <div onClick={ () => handleOnClick() }
-                     className={ `pointer-events-auto ${!isEditing ? 'cursor-pointer' : ''} transition-all w-card rounded-lg mt-5 transition-colors border-2 ${ ((isHovered || selected) && !isEditing) ? 'border-primary-default' : 'border-transparent' } ${ !image ? 'p-8 bg-background-hover text-text-default' : '' } ` }>
+                     className={ `pointer-events-auto ${!isEditing ? 'cursor-pointer' : ''} transition-all w-card rounded-lg mt-5 transition-colors border-2 ${ ((isHovered || (snap.selection === index && !snap.editing)) && !isEditing) ? 'border-primary-default' : 'border-transparent' } ${ !image ? 'p-8 bg-background-hover text-text-default' : '' } ` }>
                     {
                         image && (
                             <img

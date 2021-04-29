@@ -10908,6 +10908,11 @@ proxy-addr@~2.0.5:
     forwarded "~0.1.2"
     ipaddr.js "1.9.1"
 
+proxy-compare@1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/proxy-compare/-/proxy-compare-1.1.6.tgz#dd7737be611a9d7142fae10dbc6d0ceb74ad6da0"
+  integrity sha512-V65euKrKgKjVyEh5+4nVlAf4dHJ6Q0cF77MCeZiJaOldAl9lndy/u270SJneHiz3UkVcSIhxfOKY7aFkrMyo5g==
+
 prr@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/prr/-/prr-1.0.1.tgz#d3fc114ba06995a45ec6893f484ceb1d78f5f476"
@@ -13574,6 +13579,13 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+valtio@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/valtio/-/valtio-1.0.4.tgz#facc9c4e4fb1afb7a5503d72051356a3d1ca061f"
+  integrity sha512-hdnNFwoQNJXTHGI43i+X6l+cNB5K+hmg66RNzclQZf8JtvRSvqpRE/o5LP8ITHI1fu7sgk29ofVxBmp+vUwF4g==
+  dependencies:
+    proxy-compare "1.1.6"
 
 vary@~1.1.2:
   version "1.1.2"

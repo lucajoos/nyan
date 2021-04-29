@@ -15,7 +15,8 @@
     "gif-frames": "^1.0.1",
     "react-feather": "^2.0.9",
     "react-markdown": "^6.0.1",
-    "remark-gemoji": "^6.0.0"
+    "remark-gemoji": "^6.0.0",
+    "valtio": "^1.0.4"
   },
   "scripts": {
     "start:react": "craco start",
