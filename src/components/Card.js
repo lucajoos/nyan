@@ -21,12 +21,15 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
                 if(/(png|jpg|jpeg|svg|gif)/.test(ex)) {
                     setImage(`data:image/${ ex };base64,${ data.toString('base64') }`);
                 } else if(/(txt)/.test(ex)) {
-                    setContent(data.toString());
-
-                    inputRef.current?.addEventListener('input', () => {
+                    const resize = () => {
                         inputRef.current.setAttribute('style', 'height: auto;');
                         inputRef.current.setAttribute('style', `height: ${inputRef.current?.scrollHeight}px;`)
-                    });
+                    };
+
+                    setContent(data.toString());
+                    inputRef.current?.addEventListener('input', resize);
+
+                    resize();
 
                     if(created) {
                         inputRef.current?.focus();
@@ -42,7 +45,7 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
             if(isFile) {
                 ipcRenderer.send('copy', path);
             } else {
-                ipcRenderer.send('new', '');
+                ipcRenderer.send('new');
             }
         }
     }, [ path, isEditing ]);
@@ -56,7 +59,7 @@ const Card = ({ children, path, selected, onRemove, isFile, unselect, select, cr
 
     const handleOnClickSubmit = useCallback(() => {
         if(isFile) {
-            if(content?.length > 0) {
+            if(content?.trim()?.length > 0) {
                 ipcRenderer.send('edit', {
                     path: path,
                     content: content

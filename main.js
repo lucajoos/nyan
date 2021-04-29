@@ -158,14 +158,14 @@ ipcMain.on('copy', (event, file) => {
     }
 });
 
-ipcMain.on('new', (event, data) => {
+ipcMain.on('new', event => {
     const cc = store.get('length') + 1;
     const pt = `${ cc }.txt`;
     const fp = path.join(RESOURCES_PATH, pt);
 
     store.set('length', cc);
 
-    fs.writeFile(fp, data, { encoding: 'utf-8' }, error => {
+    fs.writeFile(fp, `New card #${fs.readdirSync(RESOURCES_PATH).length + 1}`, { encoding: 'utf-8' }, error => {
         if(error) throw error;
 
         event.sender.send('new', {
