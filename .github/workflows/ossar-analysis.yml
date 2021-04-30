@@ -3,14 +3,7 @@
 # https://github.com/github/ossar-action
 name: OSSAR
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ master ]
-  schedule:
-    - cron: '29 20 * * 5'
+on: pull_request
 
 jobs:
   OSSAR-Scan:
