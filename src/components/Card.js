@@ -44,7 +44,7 @@ const Card = ({ children, index }) => {
                 }
             });
         }
-    }, []);
+    }, [ created, isFile, path ]);
 
     useEffect(() => {
         if(inputRef.current && containerRef.current) {
@@ -68,7 +68,7 @@ const Card = ({ children, index }) => {
                 ipcRenderer.send('new');
             }
         }
-    }, [ isEditing ]);
+    }, [ isEditing, isFile, path ]);
 
     const handleOnClickRemove = useCallback(() => {
         if(isFile) {
@@ -84,7 +84,7 @@ const Card = ({ children, index }) => {
 
             GlobalStore.cards = r;
         }
-    }, [snap.cards, snap.selection]);
+    }, [ snap.cards, snap.selection, isFile, path ]);
 
     const handleSubmit = useCallback(() => {
         if(isFile) {
@@ -102,7 +102,7 @@ const Card = ({ children, index }) => {
         }
 
         --GlobalStore.editing;
-    }, [ content, index ]);
+    }, [ content, index, handleOnClickRemove, isFile, path ]);
 
     const handleOnClickEdit = useCallback(() => {
         if(isFile) {
@@ -114,7 +114,7 @@ const Card = ({ children, index }) => {
                 inputRef.current?.focus();
             });
         }
-    }, [])
+    }, [ isFile ])
 
     const handleHover = useCallback(value => {
         if(isHovered !== value) {
@@ -132,7 +132,7 @@ const Card = ({ children, index }) => {
         if(isEditing && event.key === 'Enter' && event.shiftKey) {
             handleSubmit();
         }
-    }, [isEditing, content]);
+    }, [ isEditing, handleSubmit ]);
 
     return (
         <div onMouseOver={ () => handleHover(true) } onMouseLeave={ () => handleHover(false) }
@@ -198,7 +198,7 @@ const Card = ({ children, index }) => {
                                 </ReactMarkdown>
                             </div>
                             <textarea
-                                className={ `p-0 m-0 overflow-x-hidden box-border resize-none bg-background-hover border-none pointer-events-${ isEditing ? 'auto opacity-100' : 'none opacity-0 absolute'} max-h-card` }
+                                className={ `p-0 m-0 overflow-x-hidden box-border resize-none bg-background-hover border-none pointer-events-${ isEditing ? 'auto opacity-100' : 'none opacity-0 absolute' } max-h-card` }
                                 onInput={ event => handleInputChange(event) }
                                 ref={ inputRef }
                                 value={ content || '' }

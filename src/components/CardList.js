@@ -26,10 +26,8 @@ const CardList = () => {
     }, []);
 
 
-    const items = snap.cards?.map(({ path, created = false }, index) => {
-        if(path) {
-            return <Card key={ path.toString() } index={ index }/>
-        }
+    const items = snap.cards?.filter(file => !!file.path).map(({ path, created = false }, index) => {
+        return <Card key={ path.toString() } index={ index }/>
     });
 
     return (
