@@ -23,8 +23,8 @@ jobs:
         run: |
           yarn install
 
-      - name: yarn test
+      - name: Build project
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          yarn run dist
+          yarn run build

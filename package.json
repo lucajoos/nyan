@@ -29,7 +29,7 @@
     "start:forge": "electron-forge start",
     "package:forge": "electron-forge package",
     "make:forge": "electron-forge make",
-    "dist": "yarn run build:react && yarn run make:forge",
+    "build": "yarn run build:react && yarn run make:forge",
     "wait": "node wait.js",
     "dev": "nf start"
   },
