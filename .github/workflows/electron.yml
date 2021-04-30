@@ -22,6 +22,7 @@ jobs:
       - name: yarn install
         run: |
           yarn install
+          ls
   build-react:
     needs: install
     runs-on: ubuntu-latest
@@ -29,6 +30,7 @@ jobs:
     steps:
       - name: Build react
         run: |
+          ls
           yarn run build:react
   build-forge:
     needs: build-react
