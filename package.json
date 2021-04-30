@@ -93,11 +93,15 @@
         },
         {
           "name": "@electron-forge/maker-deb",
-          "config": {}
+          "config": {
+            "executableName": "Nyan"
+          }
         },
         {
           "name": "@electron-forge/maker-rpm",
-          "config": {}
+          "config": {
+            "executableName": "Nyan"
+          }
         }
       ]
     }
