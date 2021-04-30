@@ -1,6 +1,6 @@
 {
   "name": "nyan",
-  "productName": "Nyan",
+  "productName": "nyan",
   "version": "1.1.2",
   "private": true,
   "main": "main.js",
@@ -10,6 +10,7 @@
     "name": "Luca Joos",
     "email": "1a85ra7z@gmail.com"
   },
+  "license": "MIT",
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
     "gif-frames": "^1.0.1",
@@ -28,8 +29,8 @@
     "start:electron": "electron .",
     "start:forge": "electron-forge start",
     "package:forge": "electron-forge package",
-    "make:forge": "electron-forge make",
-    "dist": "yarn run build:react && yarn run make:forge",
+    "build:forge": "electron-forge make",
+    "build": "yarn run build:react && yarn run build:forge",
     "wait": "node wait.js",
     "dev": "nf start"
   },
@@ -60,12 +61,12 @@
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
+    "@testing-library/user-event": "^13.1.8",
     "autoprefixer": "9",
     "electron": "^12.0.5",
     "foreman": "^3.0.1",
     "node-fetch": "^2.6.1",
-    "postcss": "7",
+    "postcss": "8",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",

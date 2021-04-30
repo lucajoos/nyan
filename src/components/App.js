@@ -10,7 +10,7 @@ import { useSnapshot } from 'valtio';
 const { ipcRenderer } = require('electron');
 const mousetrap = require('mousetrap');
 
-mousetrap.addKeycodes({
+mousetrap?.addKeycodes({
     43: 'plus'
 });
 
@@ -22,11 +22,9 @@ const App = () => {
     const handleOnDrop = useCallback(event => {
         event.preventDefault();
 
-        const paths = [ ...event.dataTransfer.files ].map(file => {
-            if(file ? file?.path?.length > 0 : false) {
-                return file.path
-            }
-        });
+        const paths = [ ...event.dataTransfer.files ].filter(file => {
+            return file ? file?.path?.length > 0 : false;
+        }).map(file => file.path);
 
         ipcRenderer.send('drop', paths);
 
@@ -35,7 +33,7 @@ const App = () => {
         }
 
         return false;
-    }, [ isDragging, snap ]);
+    }, [ isDragging ]);
 
     useEffect(() => {
         mousetrap.bind('enter', () => {
@@ -107,11 +105,9 @@ const App = () => {
 
     const handleOnInputChange = useCallback(event => {
         if(event?.target?.files?.length > 0) {
-            const paths = [ ...event.target.files ].map(file => {
-                if(file ? file?.path?.length > 0 : false) {
-                    return file.path
-                }
-            });
+            const paths = [ ...event.target.files ].filter(file => {
+                return file ? file?.path?.length > 0 : false;
+            }).map(file => file.path);
 
             ipcRenderer.send('drop', paths);
 
