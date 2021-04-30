@@ -1,13 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 const gifFrames = require('gif-frames');
-const { ipcMain, clipboard } = require('electron');
+const { ipcMain, clipboard, BrowserWindow } = require('electron');
 const { RESOURCES_PATH, PREVIEWS_PATH } = require('./constants')
 const Store = require('electron-store');
 
 const store = new Store();
 
-module.exports = window => {
+module.exports = () => {
     ipcMain.on('drop', (event, paths) => {
         let cf = index => {
             const cc = store.get('length') + 1;
@@ -67,6 +67,7 @@ module.exports = window => {
 
     ipcMain.on('copy', (event, file) => {
         if(file) {
+            const window = BrowserWindow.getFocusedWindow();
             const bn = path.basename(file).split('.');
             const ex = bn[bn.length - 1];
 
@@ -83,7 +84,7 @@ module.exports = window => {
                 });
             }
 
-            if(!!window) {
+            if(window) {
                 window.close();
             }
         }
