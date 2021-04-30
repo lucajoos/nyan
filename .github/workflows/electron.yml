@@ -1,15 +1,10 @@
 name: Electron
 
-on: push
+on: pull_request
 
 jobs:
-  install: 
-    runs-on: ${{ matrix.os }}
-    
-    strategy:
-      matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
-    
+  build-react:
+    runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v1
@@ -22,16 +17,15 @@ jobs:
       - name: yarn install
         run: |
           yarn install
-          ls
-  build-react:
-    needs: install
-    runs-on: ubuntu-latest
-    
-    steps:
       - name: Build react
         run: |
-          ls
           yarn run build:react
+      - name: Upload react artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: react-artifact
+          path: |
+            build
   build-forge:
     needs: build-react
     runs-on: ${{ matrix.os }}
@@ -39,8 +33,12 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
-
+    
     steps:
+      - name: Download react artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: react-artifact
       - name: Build electron
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
