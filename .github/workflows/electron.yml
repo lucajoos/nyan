@@ -1,15 +1,15 @@
-name: Electron Build
+name: Electron
 
 on: push
 
 jobs:
-  release:
+  install: 
     runs-on: ${{ matrix.os }}
-
+    
     strategy:
       matrix:
-        os: [macos-10.14, windows-2019, ubuntu-18.04]
-
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v1
@@ -22,8 +22,24 @@ jobs:
       - name: yarn install
         run: |
           yarn install
+  build-react:
+    needs: install
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Build react
+        run: |
+          yarn run build:react
+  build-forge:
+    needs: build-react
+    runs-on: ${{ matrix.os }}
 
-      - name: Build project
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+
+    steps:
+      - name: Build electron
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
