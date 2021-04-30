@@ -1,6 +1,6 @@
 {
   "name": "nyan",
-  "productName": "Nyan",
+  "productName": "nyan",
   "version": "1.1.2",
   "private": true,
   "main": "main.js",
@@ -77,8 +77,7 @@
     "forge": {
       "packagerConfig": {
         "icon": "./src/assets/icons/win/icon.ico",
-        "asar": true,
-        "executableName": "Nyan"
+        "asar": true
       },
       "makers": [
         {
@@ -93,15 +92,11 @@
         },
         {
           "name": "@electron-forge/maker-deb",
-          "config": {
-            "executableName": "Nyan"
-          }
+          "config": {}
         },
         {
           "name": "@electron-forge/maker-rpm",
-          "config": {
-            "executableName": "Nyan"
-          }
+          "config": {}
         }
       ]
     }
