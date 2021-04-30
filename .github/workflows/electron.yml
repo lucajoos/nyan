@@ -17,9 +17,11 @@ jobs:
       - name: yarn install
         run: |
           yarn install
+          
       - name: Build react
         run: |
           yarn run build:react
+          
       - name: Upload react artifact
         uses: actions/upload-artifact@v2
         with:
@@ -35,12 +37,40 @@ jobs:
         os: [macos-latest, windows-latest, ubuntu-latest]
     
     steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+
+      - name: yarn install
+        run: |
+          yarn install
+          
+      - name: Build react
+        run: |
+          yarn run build:react
+          
+      - name: Upload react artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: react-artifact
+          path: |
+            build
+            
       - name: Download react artifact
         uses: actions/download-artifact@v2
         with:
           name: react-artifact
+          
       - name: Build electron
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           yarn run build
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifact-${{ matrix.os }}
+          path: |
+            out
