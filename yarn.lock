@@ -1994,10 +1994,10 @@
     "@babel/runtime" "^7.12.5"
     "@testing-library/dom" "^7.28.1"
 
-"@testing-library/user-event@^13.1.8":
-  version "13.1.8"
-  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-13.1.8.tgz#9cbf342b88d837ee188f9f9f4df6d1beaaf179c2"
-  integrity sha512-M04HgOlJvxILf5xyrkJaEQfFOtcvhy3usLldQIEg9zgFIYQofSmFGVfFlS7BWowqlBGLrItwGMlPXCoBgoHSiw==
+"@testing-library/user-event@^13.1.9":
+  version "13.1.9"
+  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-13.1.9.tgz#29e49a42659ac3c1023565ff56819e0153a82e99"
+  integrity sha512-NZr0zL2TMOs2qk+dNlqrAdbaRW5dAmYwd1yuQ4r7HpkVEOj0MWuUjDWwKhcLd/atdBy8ZSMHSKp+kXSQe47ezg==
   dependencies:
     "@babel/runtime" "^7.12.5"
 
@@ -5204,10 +5204,10 @@ electron-winstaller@^4.0.1:
     lodash.template "^4.2.2"
     temp "^0.9.0"
 
-electron@^12.0.7:
-  version "12.0.7"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-12.0.7.tgz#e0fca2c8be34cb7da48c4d15cfb1d2ad666d2718"
-  integrity sha512-722TZNKDuLpEmj96AzTYFKHaJEH98xgOBH0aldStaPXI1xDFfb9SJQQuirvwFlkwG5OqQdz6Ne3OwwJ7Dbs5nQ==
+electron@^12.0.8:
+  version "12.0.8"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-12.0.8.tgz#e52583b2b4f1eaa6fbb0e3666b9907f99f1f24c7"
+  integrity sha512-bN2wYNnnma7ugBsiwysO1LI6oTTV1lDHOXuWip+OGjDUiz0IiJmZ+r0gAIMMeypVohZh7AA1ftnKad7tJ8sH4A==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
@@ -10962,10 +10962,10 @@ proxy-addr@~2.0.5:
     forwarded "~0.1.2"
     ipaddr.js "1.9.1"
 
-proxy-compare@1.1.6:
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/proxy-compare/-/proxy-compare-1.1.6.tgz#dd7737be611a9d7142fae10dbc6d0ceb74ad6da0"
-  integrity sha512-V65euKrKgKjVyEh5+4nVlAf4dHJ6Q0cF77MCeZiJaOldAl9lndy/u270SJneHiz3UkVcSIhxfOKY7aFkrMyo5g==
+proxy-compare@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/proxy-compare/-/proxy-compare-2.0.0.tgz#36f41114a25fcf359037308d12529183a9dc182c"
+  integrity sha512-xhJF1+vPCnu93QYva3Weii5ho1AeX5dsR/P5O7pzy9QLxeOgMSQNC8zDo0bGg9vtn61Pu5Qn+5w/Y8OSU5k+8g==
 
 prr@~1.0.1:
   version "1.0.1"
@@ -13649,12 +13649,12 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-valtio@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/valtio/-/valtio-1.0.4.tgz#facc9c4e4fb1afb7a5503d72051356a3d1ca061f"
-  integrity sha512-hdnNFwoQNJXTHGI43i+X6l+cNB5K+hmg66RNzclQZf8JtvRSvqpRE/o5LP8ITHI1fu7sgk29ofVxBmp+vUwF4g==
+valtio@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/valtio/-/valtio-1.0.5.tgz#854ce6835e9263dd9f66aaa63d83b94b075f6775"
+  integrity sha512-SysrWAVeV0OZCVQwBsOil5/kvACY4HshFMw9hT+TzGtGP3WEbMpFqAlagZ0ikv4E0rPHcBKCcvDTj5VBeyquaw==
   dependencies:
-    proxy-compare "1.1.6"
+    proxy-compare "2.0.0"
 
 vary@~1.1.2:
   version "1.1.2"
