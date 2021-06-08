@@ -18,7 +18,7 @@
     "react-feather": "^2.0.9",
     "react-markdown": "^6.0.2",
     "remark-gemoji": "^6.0.0",
-    "valtio": "^1.0.5",
+    "valtio": "^1.0.6",
     "electron-store": "^8.0.0"
   },
   "scripts": {
@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@craco/craco": "^6.1.1",
-    "@electron-forge/cli": "^6.0.0-beta.55",
+    "@electron-forge/cli": "^6.0.0-beta.57",
     "@electron-forge/maker-deb": "^6.0.0-beta.55",
     "@electron-forge/maker-rpm": "^6.0.0-beta.55",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.55",
