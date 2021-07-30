@@ -5237,10 +5237,10 @@ electron-winstaller@^5.0.0:
     lodash.template "^4.2.2"
     temp "^0.9.0"
 
-electron@^12.0.9:
-  version "12.0.9"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-12.0.9.tgz#d582afa8f6fc0c429606f0961a4c89b376994823"
-  integrity sha512-p5aEt1tIh/PYjwN+6MHTc5HtW529XR9r4Qlj9PPcSb5ubkotSsS0BtWJoRPhDenSAN8sgHk3sbZLxXPJtdnRYA==
+electron@^13.1.7:
+  version "13.1.7"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-13.1.7.tgz#7e17f5c93a8d182a2a486884fed3dc34ab101be9"
+  integrity sha512-sVfpP/0s6a82FK32LMuEe9L+aWZw15u3uYn9xUJArPjy4OZHteE6yM5871YCNXNiDnoCLQ5eqQWipiVgHsf8nQ==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
@@ -13714,10 +13714,10 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-valtio@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/valtio/-/valtio-1.1.0.tgz#6069ba7b5ae7e05a579e81ca678b4142dbd7e478"
-  integrity sha512-CDRbi53VxMSB0oRJ4u/ueqrmHKkPxzRMif4Ew0SSqiyaDVvPnMULMPq+jmN3XXdLCmbQgh20Kt1G/YA48i5Kkg==
+valtio@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/valtio/-/valtio-1.1.2.tgz#232095f61efe13755719ed0019b70d7926630be1"
+  integrity sha512-nj2tba3pM/Z3awGZ/A3aRYmBBYjyaeusfUKoWvRdDAO+VL+RgXjKzfarv/ql2HDRQboa3w9FGlpBKiGUODQuQw==
   dependencies:
     proxy-compare "2.0.1"
 
