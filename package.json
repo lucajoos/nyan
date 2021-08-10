@@ -18,7 +18,7 @@
     "react-feather": "^2.0.9",
     "react-markdown": "^6.0.2",
     "remark-gemoji": "^6.0.0",
-    "valtio": "^1.1.0",
+    "valtio": "^1.2.0",
     "electron-store": "^8.0.0"
   },
   "scripts": {
