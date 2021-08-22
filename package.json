@@ -16,7 +16,7 @@
     "gif-frames": "^1.0.1",
     "mousetrap": "^1.6.5",
     "react-feather": "^2.0.9",
-    "react-markdown": "^6.0.2",
+    "react-markdown": "^7.0.0",
     "remark-gemoji": "^6.0.0",
     "valtio": "^1.2.1",
     "electron-store": "^8.0.0"
