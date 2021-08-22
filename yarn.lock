@@ -11012,10 +11012,10 @@ proxy-addr@~2.0.5:
     forwarded "~0.1.2"
     ipaddr.js "1.9.1"
 
-proxy-compare@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/proxy-compare/-/proxy-compare-2.0.1.tgz#3ae19cf47f64e89bd60fe4f57afd124f733ef64f"
-  integrity sha512-uXj3TtWdR1S2SNwJKbgJB+1FJm9HM3sFzlVc8W6PZvU6ogt9mlkb1WwZQpuKFLkDS6LKY4+FBE18K6ZArphnHA==
+proxy-compare@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/proxy-compare/-/proxy-compare-2.0.2.tgz#343e624d0ec399dfbe575f1d365d4fa042c9fc69"
+  integrity sha512-3qUXJBariEj3eO90M3Rgqq3+/P5Efl0t/dl9g/1uVzIQmO3M+ql4hvNH3mYdu8H+1zcKv07YvL55tsY74jmH1A==
 
 prr@~1.0.1:
   version "1.0.1"
@@ -12022,10 +12022,10 @@ sass-loader@^10.0.5:
     schema-utils "^3.0.0"
     semver "^7.3.2"
 
-sass@^1.36.0:
-  version "1.36.0"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.36.0.tgz#5912ef9d5d16714171ba11cb17edb274c4bbc07e"
-  integrity sha512-fQzEjipfOv5kh930nu3Imzq3ie/sGDc/4KtQMJlt7RRdrkQSfe37Bwi/Rf/gfuYHsIuE1fIlDMvpyMcEwjnPvg==
+sass@^1.38.0:
+  version "1.38.0"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.38.0.tgz#2f3e60a1efdcdc910586fa79dc89d3399a145b4f"
+  integrity sha512-WBccZeMigAGKoI+NgD7Adh0ab1HUq+6BmyBUEaGxtErbUtWUevEbdgo5EZiJQofLUGcKtlNaO2IdN73AHEua5g==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
 
@@ -13704,12 +13704,12 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-valtio@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/valtio/-/valtio-1.1.0.tgz#6069ba7b5ae7e05a579e81ca678b4142dbd7e478"
-  integrity sha512-CDRbi53VxMSB0oRJ4u/ueqrmHKkPxzRMif4Ew0SSqiyaDVvPnMULMPq+jmN3XXdLCmbQgh20Kt1G/YA48i5Kkg==
+valtio@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/valtio/-/valtio-1.2.1.tgz#19d8514ff5c325ce1dc0ad9ef622d1240c6cbce5"
+  integrity sha512-DQayRId14Luiwh/24wJxgswEFeZJHSWpQLjuAgzuRcRS1ZIhq8F/Fh8h7VvJWLm7AGauyPGHhoEeEAlXUb+zsA==
   dependencies:
-    proxy-compare "2.0.1"
+    proxy-compare "2.0.2"
 
 vary@~1.1.2:
   version "1.1.2"
